@@ -1,31 +1,42 @@
-let links = [];
+let resources = [];
 
 db.collection("links").onSnapshot(snapshot => {
-    links = [];
-    snapshot.forEach(doc => links.push(doc.data()));
-    displayLinks(links);
+  resources = [];
+  snapshot.forEach(doc => resources.push(doc.data()));
+  updateFilters();
+  display(resources);
 });
 
-function displayLinks(data) {
-    list.innerHTML = "";
-    data.forEach(l => {
-        const li = document.createElement("li");
-        const a = document.createElement("a");
-        a.href = l.url;
-        a.textContent = `${l.title} (${l.subject})`;
-        a.target = "_blank";
-        li.appendChild(a);
-        list.appendChild(li);
-    });
+function display(data) {
+  list.innerHTML = "";
+  data.forEach(r => {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = r.url;
+    a.target = "_blank";
+    a.textContent = `${r.title} (${r.subject} - ${r.subtopic})`;
+    li.appendChild(a);
+    list.appendChild(li);
+  });
 }
 
 function filterLinks() {
-    const s = subjectFilter.value;
-    const sub = subtopicFilter.value;
+  const s = subjectFilter.value;
+  const t = subtopicFilter.value;
 
-    let result = links;
-    if (s !== "all") result = result.filter(l => l.subject === s);
-    if (sub !== "all") result = result.filter(l => l.subtopic === sub);
+  display(resources.filter(r =>
+    (s === "all" || r.subject === s) &&
+    (t === "all" || r.subtopic === t)
+  ));
+}
 
-    displayLinks(result);
+function updateFilters() {
+  subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
+  subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
+
+  [...new Set(resources.map(r => r.subject))]
+    .forEach(s => subjectFilter.innerHTML += `<option>${s}</option>`);
+
+  [...new Set(resources.map(r => r.subtopic))]
+    .forEach(t => subtopicFilter.innerHTML += `<option>${t}</option>`);
 }
