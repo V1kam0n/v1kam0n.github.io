@@ -1,10 +1,11 @@
 {
-  "name": "Study Links",
-  "short_name": "StudyLinks",
-  "start_url": "index.html",
+  "name": "WISELearn",
+  "short_name": "WISELearn",
+  "description": "Smart learning resources powered by WISELearn",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4CAF50",
+  "background_color": "#fff8dc",
+  "theme_color": "#92400e",
   "icons": [
     {
       "src": "icon-192.png",

@@ -1,48 +1,126 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
+/* ===== WISELearn THEME ===== */
+
+:root {
+  --primary: #4f46e5;   /* Indigo */
+  --secondary: #22c55e; /* Green */
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  max-width: 720px;
+  margin: auto;
+  padding: 24px;
+  color: var(--text);
+}
+
+/* ===== HEADER ===== */
 h1 {
   text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 4px;
 }
 
 .subtitle {
   text-align: center;
-  color: #555;
+  color: var(--muted);
+  margin-bottom: 24px;
 }
 
+/* ===== CARDS ===== */
 .card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
 }
 
-input, select, button {
+/* ===== INPUTS ===== */
+input, select {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 15px;
+  background: #fff;
 }
 
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ===== BUTTONS ===== */
 button {
-  background: #4CAF50;
-  color: white;
+  width: 100%;
+  padding: 12px;
+  margin-top: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
   border: none;
-  border-radius: 5px;
+  cursor: pointer;
+  background: var(--primary);
+  color: white;
+  transition: transform .1s ease, box-shadow .1s ease;
 }
 
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(79,70,229,.3);
+}
+
+button.secondary {
+  background: var(--secondary);
+}
+
+/* ===== LIST ===== */
 ul {
   list-style: none;
   padding: 0;
 }
 
 li {
-  background: white;
+  background: #f9fafb;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+}
+
+li a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+}
+
+li a:hover {
+  color: var(--primary);
+}
+
+/* ===== ADMIN PANEL ===== */
+#adminPanel h2 {
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 6px;
+}
+
+#loginCard h2 {
+  text-align: center;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
 }
