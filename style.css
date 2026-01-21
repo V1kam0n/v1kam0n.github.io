@@ -33,14 +33,16 @@ body {
 body.with-bg {
   background:
     linear-gradient(
-      rgba(248, 250, 252, 0.45),
-      rgba(248, 250, 252, 0.45)
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0.25)
     ),
-    url("/WISELearn/assets/library-bg.jpg");
+    url("assets/library-bg.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
+
+
 
 /* =========================
    HEADER
