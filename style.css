@@ -15,12 +15,25 @@
 
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
   max-width: 720px;
   margin: auto;
   padding: 24px;
   color: var(--text);
+
+  background-color: #f8fafc;
+  background-image:
+    linear-gradient(
+      rgba(248, 250, 252, 0.94),
+      rgba(248, 250, 252, 0.94)
+    ),
+    url("./library-bg.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
+
 
 /* ===== HEADER ===== */
 h1 {
