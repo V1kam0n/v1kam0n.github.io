@@ -1,4 +1,6 @@
-/* ===== WISELearn THEME ===== */
+/* =========================
+   WISELearn THEME
+   ========================= */
 
 :root {
   --primary: #4f46e5;   /* Indigo */
@@ -13,29 +15,40 @@
   box-sizing: border-box;
 }
 
+/* =========================
+   BASE BODY (NO IMAGE)
+   ========================= */
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
-  background:
-    linear-gradient(
-      rgba(248, 250, 252, 0.75),
-      rgba(248, 250, 252, 0.75)
-    ),
-    url("/WISELearn/assets/library-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background: var(--bg);
   max-width: 720px;
   margin: auto;
   padding: 24px;
   color: var(--text);
 }
 
+/* =========================
+   PAGE WITH BACKGROUND IMAGE
+   ========================= */
+body.with-bg {
+  background:
+    linear-gradient(
+      rgba(248, 250, 252, 0.45),
+      rgba(248, 250, 252, 0.45)
+    ),
+    url("/WISELearn/assets/library-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
 
-/* ===== HEADER ===== */
+/* =========================
+   HEADER
+   ========================= */
 h1 {
   text-align: center;
   font-size: 2.2rem;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .subtitle {
@@ -44,32 +57,40 @@ h1 {
   margin-bottom: 24px;
 }
 
-/* ===== CARDS ===== */
+/* =========================
+   CARDS
+   ========================= */
 .card {
   background: var(--card);
   padding: 20px;
   border-radius: 14px;
   margin-bottom: 18px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* ===== INPUTS ===== */
-input, select {
+/* =========================
+   INPUTS
+   ========================= */
+input,
+select {
   width: 100%;
   padding: 12px 14px;
   margin-top: 10px;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   font-size: 15px;
-  background: #fff;
+  background: #ffffff;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
 }
 
-/* ===== BUTTONS ===== */
+/* =========================
+   BUTTONS
+   ========================= */
 button {
   width: 100%;
   padding: 12px;
@@ -81,19 +102,21 @@ button {
   cursor: pointer;
   background: var(--primary);
   color: white;
-  transition: transform .1s ease, box-shadow .1s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(79,70,229,.3);
+  box-shadow: 0 6px 15px rgba(79,70,229,0.35);
 }
 
 button.secondary {
   background: var(--secondary);
 }
 
-/* ===== LIST ===== */
+/* =========================
+   LIST
+   ========================= */
 ul {
   list-style: none;
   padding: 0;
@@ -118,16 +141,18 @@ li a:hover {
   color: var(--primary);
 }
 
-/* ===== ADMIN PANEL ===== */
+/* =========================
+   ADMIN
+   ========================= */
+#loginCard h2,
 #adminPanel h2 {
+  text-align: center;
   margin-bottom: 10px;
 }
 
-#loginCard h2 {
-  text-align: center;
-}
-
-/* ===== MOBILE ===== */
+/* =========================
+   MOBILE
+   ========================= */
 @media (max-width: 600px) {
   body {
     padding: 16px;
