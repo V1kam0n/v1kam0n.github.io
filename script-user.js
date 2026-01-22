@@ -1,66 +1,92 @@
-// DOM elements
-const list = document.getElementById("list");
-const subjectFilter = document.getElementById("subjectFilter");
-const subtopicFilter = document.getElementById("subtopicFilter");
-
 let resources = [];
 
-// REAL-TIME LISTENER
-db.collection("links").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+/* =========================
+   LOAD DATA FROM FIRESTORE
+   ========================= */
+db.collection("links").onSnapshot(snapshot => {
   resources = [];
-  snapshot.forEach(doc => resources.push(doc.data()));
+  snapshot.forEach(doc => {
+    resources.push(doc.data());
+  });
+
   updateFilters();
-  display(resources);
+  filterLinks(); // important: apply filters + search together
 });
 
-// DISPLAY LINKS
+/* =========================
+   DISPLAY LIST
+   ========================= */
 function display(data) {
   list.innerHTML = "";
 
+  if (data.length === 0) {
+    list.innerHTML = "<li>No results found</li>";
+    return;
+  }
+
   data.forEach(r => {
     const li = document.createElement("li");
-    const a = document.createElement("a");
 
+    const a = document.createElement("a");
     a.href = r.url;
     a.target = "_blank";
-    a.textContent = `${r.title} (${r.subject || "General"} - ${r.subtopic || "Misc"})`;
+    a.textContent = `${r.title} (${r.subject} - ${r.subtopic})`;
 
     li.appendChild(a);
     list.appendChild(li);
   });
 }
 
-// FILTER LINKS
+/* =========================
+   FILTER + SEARCH (MAIN LOGIC)
+   ========================= */
 function filterLinks() {
-  const s = subjectFilter.value;
-  const t = subtopicFilter.value;
+  const subject = subjectFilter.value;
+  const topic = subtopicFilter.value;
+  const query = searchInput.value.toLowerCase().trim();
 
-  display(
-    resources.filter(r =>
-      (s === "all" || r.subject === s) &&
-      (t === "all" || r.subtopic === t)
-    )
-  );
+  const filtered = resources.filter(r => {
+    const matchesSubject =
+      subject === "all" || r.subject === subject;
+
+    const matchesTopic =
+      topic === "all" || r.subtopic === topic;
+
+    const matchesSearch =
+      r.title.toLowerCase().includes(query) ||
+      r.subject.toLowerCase().includes(query) ||
+      r.subtopic.toLowerCase().includes(query);
+
+    return matchesSubject && matchesTopic && matchesSearch;
+  });
+
+  display(filtered);
 }
 
-// UPDATE FILTER DROPDOWNS
+/* =========================
+   UPDATE DROPDOWNS
+   ========================= */
 function updateFilters() {
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
   subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
 
-  [...new Set(resources.map(r => r.subject).filter(Boolean))]
-    .forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s;
-      opt.textContent = s;
-      subjectFilter.appendChild(opt);
-    });
+  const subjects = new Set();
+  const topics = new Set();
 
-  [...new Set(resources.map(r => r.subtopic).filter(Boolean))]
-    .forEach(t => {
-      const opt = document.createElement("option");
-      opt.value = t;
-      opt.textContent = t;
-      subtopicFilter.appendChild(opt);
-    });
+  resources.forEach(r => {
+    if (r.subject) subjects.add(r.subject);
+    if (r.subtopic) topics.add(r.subtopic);
+  });
+
+  subjects.forEach(s => {
+    subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
+  });
+
+  topics.forEach(t => {
+    subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
+  });
+}
+
+function goHome() {
+  window.location.href = "index.html";
 }

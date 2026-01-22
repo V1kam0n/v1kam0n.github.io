@@ -3,8 +3,7 @@
    ========================= */
 
 :root {
-  --primary: #4f46e5;   /* Indigo */
-  --secondary: #22c55e; /* Green */
+  --primary: #4f46e5;
   --bg: #f8fafc;
   --card: #ffffff;
   --text: #1f2937;
@@ -16,15 +15,15 @@
 }
 
 /* =========================
-   BASE BODY (NO IMAGE)
+   BODY + BACKGROUND
    ========================= */
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
 
   background-image:
     linear-gradient(
-      rgba(255, 255, 255, 0.7),
-      rgba(255, 255, 255, 0.7)
+      rgba(255, 255, 255, 0.75),
+      rgba(255, 255, 255, 0.75)
     ),
     url("assets/library-bg.jpg");
 
@@ -36,24 +35,55 @@ body {
   max-width: 720px;
   margin: auto;
   padding: 24px;
-  color: #1f2937;
+  color: var(--text);
 }
 
-
-
 /* =========================
-   HEADER
+   HERO HEADER
    ========================= */
-h1 {
+.hero {
+  position: relative;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  padding: 22px 24px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
   text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 6px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2.4rem;
 }
 
 .subtitle {
-  text-align: center;
+  margin-top: 6px;
+  font-size: 1rem;
   color: var(--muted);
-  margin-bottom: 24px;
+}
+
+/* =========================
+   ADMIN LINK (SUBTLE)
+   ========================= */
+.admin-link.subtle {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(79, 70, 229, 0.15);
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.admin-link.subtle:hover {
+  opacity: 1;
+  background: rgba(79, 70, 229, 0.25);
 }
 
 /* =========================
@@ -61,7 +91,7 @@ h1 {
    ========================= */
 .card {
   background: var(--card);
-  padding: 20px;
+  padding: 18px;
   border-radius: 14px;
   margin-bottom: 18px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -78,39 +108,12 @@ select {
   border-radius: 10px;
   border: 1px solid #e5e7eb;
   font-size: 15px;
-  background: #ffffff;
 }
 
 input:focus,
 select:focus {
   outline: none;
   border-color: var(--primary);
-}
-
-/* =========================
-   BUTTONS
-   ========================= */
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 14px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  background: var(--primary);
-  color: white;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(79,70,229,0.35);
-}
-
-button.secondary {
-  background: var(--secondary);
 }
 
 /* =========================
@@ -126,8 +129,6 @@ li {
   padding: 14px;
   margin-bottom: 12px;
   border-radius: 12px;
-  display: flex;
-  align-items: center;
 }
 
 li a {
@@ -141,15 +142,6 @@ li a:hover {
 }
 
 /* =========================
-   ADMIN
-   ========================= */
-#loginCard h2,
-#adminPanel h2 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-/* =========================
    MOBILE
    ========================= */
 @media (max-width: 600px) {
@@ -158,49 +150,14 @@ li a:hover {
   }
 }
 
-/* ===== HERO HEADER ===== */
-.hero {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(6px);
-  padding: 18px 24px;
-  border-radius: 18px;
-  margin-bottom: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-  text-align: center;
+.back-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  margin-bottom: 14px;
 }
 
-.hero h1 {
-  margin: 0;
-  font-size: 2.4rem;
-}
-
-.hero .subtitle {
-  margin-top: 6px;
-  font-size: 1rem;
-  color: #374151;
-}
-
-/* ===== ADMIN LINK ===== */
-.hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-}
-
-.admin-link {
-  font-size: 0.85rem;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: #4f46e5;
+.back-btn:hover {
+  background: var(--primary);
   color: white;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
 }
-
-.admin-link:hover {
-  background: #4338ca;
-  transform: translateY(-1px);
-}
-
