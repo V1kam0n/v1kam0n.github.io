@@ -20,26 +20,23 @@
    ========================= */
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
-  background: var(--bg);
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.7)
+    ),
+    url("assets/library-bg.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   max-width: 720px;
   margin: auto;
   padding: 24px;
-  color: var(--text);
-}
-
-/* =========================
-   PAGE WITH BACKGROUND IMAGE
-   ========================= */
-body.with-bg {
-  background:
-    linear-gradient(
-      rgba(255, 255, 255, 0.25),
-      rgba(255, 255, 255, 0.25)
-    ),
-    url("assets/library-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  color: #1f2937;
 }
 
 
