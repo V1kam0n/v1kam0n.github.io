@@ -1,17 +1,26 @@
 const loginCard = document.getElementById("loginCard");
 const adminPanel = document.getElementById("adminPanel");
 
-const email = document.getElementById("email");
-const password = document.getElementById("password");
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-const title = document.getElementById("title");
-const url = document.getElementById("url");
-const subject = document.getElementById("subject");
-const subtopic = document.getElementById("subtopic");
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch(err => alert(err.message));
+});
 
-document.getElementById("loginBtn").addEventListener("click", login);
-document.getElementById("addBtn").addEventListener("click", addLink);
-document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  firebase.auth().signOut();
+});
+
+document.getElementById("addBtn").addEventListener("click", () => {
+  db.collection("links").add({
+    title: title.value,
+    url: url.value,
+    subject: subject.value,
+    subtopic: subtopic.value
+  });
+});
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
@@ -22,27 +31,3 @@ firebase.auth().onAuthStateChanged(user => {
     adminPanel.style.display = "none";
   }
 });
-
-function login() {
-  firebase.auth()
-    .signInWithEmailAndPassword(email.value, password.value)
-    .catch(err => alert(err.message));
-}
-
-function logout() {
-  firebase.auth().signOut();
-}
-
-function addLink() {
-  db.collection("links").add({
-    title: title.value,
-    url: url.value,
-    subject: subject.value,
-    subtopic: subtopic.value
-  });
-
-  title.value = "";
-  url.value = "";
-  subject.value = "";
-  subtopic.value = "";
-}

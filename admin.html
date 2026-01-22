@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WISELearn Admin</title>
 
-  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css" />
 
   <!-- Firebase SDKs -->
@@ -16,81 +14,40 @@
 
 <body class="admin-page">
 
-  <!-- 🔙 Back to main site -->
   <a href="index.html" class="admin-back">← Back</a>
 
-  <!-- 🔐 LOGIN CARD -->
-  <div id="loginCard" class="card admin-card">
+  <div id="loginCard" class="card">
     <h2>Admin Login</h2>
-
-    <input
-      type="email"
-      id="email"
-      placeholder="Admin Email"
-      autocomplete="username"
-    />
-
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    />
-
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
     <button id="loginBtn">Login</button>
   </div>
 
-  <!-- 🛠️ ADMIN PANEL -->
-  <div id="adminPanel" class="card admin-card" style="display: none;">
+  <div id="adminPanel" class="card" style="display:none;">
     <h2>Admin Panel</h2>
-
-    <input
-      type="text"
-      id="title"
-      placeholder="Resource Title"
-    />
-
-    <input
-      type="url"
-      id="url"
-      placeholder="Resource URL"
-    />
-
-    <select id="subject">
-      <option value="">Select Subject</option>
-      <option value="Math">Math</option>
-      <option value="Science">Science</option>
-      <option value="Computer Science">Computer Science</option>
-    </select>
-
-    <select id="subtopic">
-      <option value="">Select Topic</option>
-      <option value="Algebra">Algebra</option>
-      <option value="Physics">Physics</option>
-      <option value="Programming">Programming</option>
-    </select>
-
-    <button id="addBtn">Add Resource</button>
-    <button id="logoutBtn" class="danger">Logout</button>
+    <input id="title" placeholder="Title">
+    <input id="url" placeholder="URL">
+    <input id="subject" placeholder="Subject">
+    <input id="subtopic" placeholder="Topic">
+    <button id="addBtn">Add</button>
+    <button id="logoutBtn">Logout</button>
   </div>
 
-  <!-- 🔥 Firebase config -->
+  <!-- ✅ Firebase init ONLY HERE -->
   <script>
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      projectId: "YOUR_PROJECT_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
+
+    // ✅ db declared ONCE
     const db = firebase.firestore();
   </script>
 
-  <!-- Admin logic -->
+  <!-- ✅ Logic only -->
   <script src="script-admin.js"></script>
-
 </body>
 </html>
