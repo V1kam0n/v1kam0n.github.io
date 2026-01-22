@@ -13,6 +13,23 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+
+// FORCE LOGIN EVERY REFRESH
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    loginCard.style.display = "none";
+    adminPanel.style.display = "block";
+    resourceList.style.display = "block";
+    loadResources();
+  } else {
+    loginCard.style.display = "block";
+    adminPanel.style.display = "none";
+    resourceList.style.display = "none";
+  }
+});
+
 function login() {
   firebase.auth()
     .signInWithEmailAndPassword(email.value, password.value)
