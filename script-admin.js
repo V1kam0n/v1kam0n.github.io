@@ -1,8 +1,3 @@
-// Firebase services
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-// DOM elements
 const loginCard = document.getElementById("loginCard");
 const adminPanel = document.getElementById("adminPanel");
 
@@ -14,8 +9,11 @@ const url = document.getElementById("url");
 const subject = document.getElementById("subject");
 const subtopic = document.getElementById("subtopic");
 
-// AUTH STATE LISTENER
-auth.onAuthStateChanged(user => {
+document.getElementById("loginBtn").addEventListener("click", login);
+document.getElementById("addBtn").addEventListener("click", addLink);
+document.getElementById("logoutBtn").addEventListener("click", logout);
+
+firebase.auth().onAuthStateChanged(user => {
   if (user) {
     loginCard.style.display = "none";
     adminPanel.style.display = "block";
@@ -25,31 +23,22 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-// LOGIN
 function login() {
-  auth
+  firebase.auth()
     .signInWithEmailAndPassword(email.value, password.value)
     .catch(err => alert(err.message));
 }
 
-// LOGOUT
 function logout() {
-  auth.signOut();
+  firebase.auth().signOut();
 }
 
-// ADD LINK TO FIRESTORE
 function addLink() {
-  if (!title.value || !url.value) {
-    alert("Title and URL are required");
-    return;
-  }
-
   db.collection("links").add({
     title: title.value,
     url: url.value,
     subject: subject.value,
-    subtopic: subtopic.value,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    subtopic: subtopic.value
   });
 
   title.value = "";
