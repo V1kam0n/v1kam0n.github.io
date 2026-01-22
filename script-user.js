@@ -1,92 +1,48 @@
 let resources = [];
 
-/* =========================
-   LOAD DATA FROM FIRESTORE
-   ========================= */
 db.collection("links").onSnapshot(snapshot => {
   resources = [];
-  snapshot.forEach(doc => {
-    resources.push(doc.data());
-  });
-
+  snapshot.forEach(doc => resources.push(doc.data()));
   updateFilters();
-  filterLinks(); // important: apply filters + search together
+  display(resources);
 });
 
-/* =========================
-   DISPLAY LIST
-   ========================= */
 function display(data) {
   list.innerHTML = "";
-
-  if (data.length === 0) {
-    list.innerHTML = "<li>No results found</li>";
-    return;
-  }
-
   data.forEach(r => {
     const li = document.createElement("li");
-
     const a = document.createElement("a");
     a.href = r.url;
     a.target = "_blank";
     a.textContent = `${r.title} (${r.subject} - ${r.subtopic})`;
-
     li.appendChild(a);
     list.appendChild(li);
   });
 }
 
-/* =========================
-   FILTER + SEARCH (MAIN LOGIC)
-   ========================= */
 function filterLinks() {
-  const subject = subjectFilter.value;
-  const topic = subtopicFilter.value;
-  const query = searchInput.value.toLowerCase().trim();
+  const s = subjectFilter.value;
+  const t = subtopicFilter.value;
+  const q = searchInput.value.toLowerCase();
 
-  const filtered = resources.filter(r => {
-    const matchesSubject =
-      subject === "all" || r.subject === subject;
-
-    const matchesTopic =
-      topic === "all" || r.subtopic === topic;
-
-    const matchesSearch =
-      r.title.toLowerCase().includes(query) ||
-      r.subject.toLowerCase().includes(query) ||
-      r.subtopic.toLowerCase().includes(query);
-
-    return matchesSubject && matchesTopic && matchesSearch;
-  });
-
-  display(filtered);
+  display(
+    resources.filter(r =>
+      (s === "all" || r.subject === s) &&
+      (t === "all" || r.subtopic === t) &&
+      (r.title.toLowerCase().includes(q) ||
+       r.subject.toLowerCase().includes(q) ||
+       r.subtopic.toLowerCase().includes(q))
+    )
+  );
 }
 
-/* =========================
-   UPDATE DROPDOWNS
-   ========================= */
 function updateFilters() {
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
   subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
 
-  const subjects = new Set();
-  const topics = new Set();
+  [...new Set(resources.map(r => r.subject))]
+    .forEach(s => subjectFilter.innerHTML += `<option>${s}</option>`);
 
-  resources.forEach(r => {
-    if (r.subject) subjects.add(r.subject);
-    if (r.subtopic) topics.add(r.subtopic);
-  });
-
-  subjects.forEach(s => {
-    subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
-  });
-
-  topics.forEach(t => {
-    subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
-  });
-}
-
-function goHome() {
-  window.location.href = "index.html";
+  [...new Set(resources.map(r => r.subtopic))]
+    .forEach(t => subtopicFilter.innerHTML += `<option>${t}</option>`);
 }

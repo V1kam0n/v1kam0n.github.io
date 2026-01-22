@@ -1,10 +1,6 @@
-/* =========================
-   WISELearn THEME
-   ========================= */
-
 :root {
   --primary: #4f46e5;
-  --bg: #f8fafc;
+  --secondary: #22c55e;
   --card: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
@@ -14,111 +10,64 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   BODY + BACKGROUND
-   ========================= */
 body {
   font-family: "Segoe UI", system-ui, sans-serif;
-
-  background-image:
-    linear-gradient(
-      rgba(255, 255, 255, 0.75),
-      rgba(255, 255, 255, 0.75)
-    ),
-    url("assets/library-bg.jpg");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-
-  max-width: 720px;
-  margin: auto;
+  background: url("assets/library-bg.jpg") center / cover fixed;
+  margin: 0;
   padding: 24px;
   color: var(--text);
 }
 
-/* =========================
-   HERO HEADER
-   ========================= */
-.hero {
-  position: relative;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(6px);
-  padding: 22px 24px;
-  border-radius: 18px;
-  margin-bottom: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+.header {
+  background: rgba(255,255,255,0.9);
+  padding: 20px;
+  border-radius: 16px;
   text-align: center;
+  margin-bottom: 24px;
 }
 
-.hero h1 {
-  margin: 0;
-  font-size: 2.4rem;
-}
-
-.subtitle {
-  margin-top: 6px;
-  font-size: 1rem;
-  color: var(--muted);
-}
-
-/* =========================
-   ADMIN LINK (SUBTLE)
-   ========================= */
-.admin-link.subtle {
+.admin-link {
   position: absolute;
-  top: 14px;
+  top: 16px;
   left: 16px;
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(79, 70, 229, 0.15);
-  color: var(--primary);
+  font-size: 12px;
+  opacity: 0.4;
   text-decoration: none;
-  font-weight: 600;
-  opacity: 0.6;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  color: var(--text);
 }
 
-.admin-link.subtle:hover {
-  opacity: 1;
-  background: rgba(79, 70, 229, 0.25);
-}
-
-/* =========================
-   CARDS
-   ========================= */
 .card {
   background: var(--card);
-  padding: 18px;
+  padding: 20px;
   border-radius: 14px;
   margin-bottom: 18px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
 }
 
-/* =========================
-   INPUTS
-   ========================= */
-input,
-select {
+input, select {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px;
   margin-top: 10px;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  font-size: 15px;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary);
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
 }
 
-/* =========================
-   LIST
-   ========================= */
+button.secondary {
+  background: var(--secondary);
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -131,33 +80,8 @@ li {
   border-radius: 12px;
 }
 
-li a {
-  text-decoration: none;
-  color: var(--text);
-  font-weight: 600;
-}
-
-li a:hover {
-  color: var(--primary);
-}
-
-/* =========================
-   MOBILE
-   ========================= */
-@media (max-width: 600px) {
-  body {
-    padding: 16px;
-  }
-}
-
-.back-btn {
-  background: transparent;
-  color: var(--primary);
-  border: 2px solid var(--primary);
-  margin-bottom: 14px;
-}
-
-.back-btn:hover {
-  background: var(--primary);
-  color: white;
+#adminList li button {
+  width: auto;
+  margin-right: 8px;
+  margin-top: 8px;
 }
