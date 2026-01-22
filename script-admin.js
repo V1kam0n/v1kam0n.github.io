@@ -1,106 +1,48 @@
-const adminList = document.getElementById("adminList");
-
 firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    loginCard.style.display = "none";
-    adminPanel.style.display = "block";
-    resourceList.style.display = "block";
-    loadResources();
-  } else {
-    loginCard.style.display = "block";
-    adminPanel.style.display = "none";
-    resourceList.style.display = "none";
-  }
-});
-
-
-// FORCE LOGIN EVERY REFRESH
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
-
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    loginCard.style.display = "none";
-    adminPanel.style.display = "block";
-    resourceList.style.display = "block";
-    loadResources();
-  } else {
-    loginCard.style.display = "block";
-    adminPanel.style.display = "none";
-    resourceList.style.display = "none";
-  }
+  loginCard.style.display = user ? "none" : "block";
+  adminPanel.style.display = user ? "block" : "none";
+  if (user) loadAdminList();
 });
 
 function login() {
-  firebase.auth()
-    .signInWithEmailAndPassword(email.value, password.value)
-    .catch(err => alert(err.message));
+  firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+    .catch(e => alert(e.message));
 }
 
 function logout() {
   firebase.auth().signOut();
 }
 
-function saveLink() {
-  const data = {
+function addLink() {
+  if (!title.value || !url.value || !type.value) {
+    alert("Title, URL & type required");
+    return;
+  }
+
+  db.collection("links").add({
     title: title.value,
     url: url.value,
-    subject: subject.value,
-    subtopic: subtopic.value
-  };
+    subject: subject.value || "General",
+    subtopic: subtopic.value || "General",
+    type: type.value
+  });
 
-  const id = editId.value;
-
-  if (id) {
-    // UPDATE
-    db.collection("links").doc(id).update(data)
-      .then(() => {
-        alert("Updated!");
-        clearForm();
-      });
-  } else {
-    // ADD
-    db.collection("links").add(data)
-      .then(() => alert("Added!"));
-  }
+  title.value = url.value = subject.value = subtopic.value = type.value = "";
 }
 
-function loadResources() {
-  db.collection("links").onSnapshot(snapshot => {
+function loadAdminList() {
+  db.collection("links").onSnapshot(snap => {
     adminList.innerHTML = "";
-    snapshot.forEach(doc => {
-      const r = doc.data();
+    snap.forEach(doc => {
       const li = document.createElement("li");
+      li.textContent = doc.data().title;
 
-      li.innerHTML = `
-        <strong>${r.title}</strong><br>
-        <small>${r.subject} - ${r.subtopic}</small><br>
-        <button onclick="editLink('${doc.id}', '${r.title}', '${r.url}', '${r.subject}', '${r.subtopic}')">Edit</button>
-        <button class="secondary" onclick="deleteLink('${doc.id}')">Delete</button>
-      `;
+      const del = document.createElement("button");
+      del.textContent = "❌";
+      del.onclick = () => confirm("Delete?") && doc.ref.delete();
 
+      li.appendChild(del);
       adminList.appendChild(li);
     });
   });
-}
-
-function editLink(id, t, u, s, sub) {
-  editId.value = id;
-  title.value = t;
-  url.value = u;
-  subject.value = s;
-  subtopic.value = sub;
-}
-
-function deleteLink(id) {
-  if (confirm("Delete this resource?")) {
-    db.collection("links").doc(id).delete();
-  }
-}
-
-function clearForm() {
-  editId.value = "";
-  title.value = "";
-  url.value = "";
-  subject.value = "";
-  subtopic.value = "";
 }

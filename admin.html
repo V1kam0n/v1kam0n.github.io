@@ -7,40 +7,36 @@
 </head>
 <body>
 
-<header class="header">
-  <h1>🔐 Admin Panel</h1>
-  <p class="subtitle">WISELearn management</p>
-</header>
+<a href="index.html" class="back-link">← Back</a>
 
 <section id="loginCard" class="card">
   <h2>Admin Login</h2>
-  <input id="email" type="email" placeholder="Admin email">
+  <input id="email" type="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
   <button onclick="login()">Login</button>
 </section>
 
 <section id="adminPanel" class="card" style="display:none;">
-  <h2>Add / Edit Resource</h2>
-
-  <!-- hidden id for editing -->
-  <input type="hidden" id="editId">
+  <h2>Manage Resources</h2>
 
   <input id="title" placeholder="Title">
-  <input id="url" placeholder="URL (https://...)">
+  <input id="url" placeholder="URL">
   <input id="subject" placeholder="Subject">
   <input id="subtopic" placeholder="Topic">
 
-  <button onclick="saveLink()">Save</button>
-  <button class="secondary" onclick="clearForm()">Clear</button>
-  <button onclick="logout()">Logout</button>
-</section>
+  <select id="type">
+    <option value="">Select type</option>
+    <option value="video">Video</option>
+    <option value="notes">Notes</option>
+    <option value="quiz">Quiz</option>
+  </select>
 
-<section id="resourceList" class="card" style="display:none;">
-  <h2>Existing Resources</h2>
+  <button onclick="addLink()">Add Resource</button>
+  <button class="secondary" onclick="logout()">Logout</button>
+
   <ul id="adminList"></ul>
 </section>
 
-<!-- Firebase COMPAT -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
