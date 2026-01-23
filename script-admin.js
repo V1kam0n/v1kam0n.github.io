@@ -135,21 +135,3 @@ window.clearForm = function () {
   editIdInput.value = "";
 };
 
-window.migrateSubtopicToTopic = function () {
-  if (!confirm("Run migration? This should be done ONCE.")) return;
-
-  db.collection("links").get().then(snapshot => {
-    snapshot.forEach(doc => {
-      const data = doc.data();
-
-      // Only migrate old data
-      if (!data.topic && data.subtopic) {
-        db.collection("links").doc(doc.id).update({
-          topic: data.subtopic
-        });
-      }
-    });
-
-    alert("Migration complete!");
-  });
-};
