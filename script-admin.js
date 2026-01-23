@@ -10,6 +10,7 @@ const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
 const subjectInput = document.getElementById("subject");
 const subtopicInput = document.getElementById("subtopic");
+const typeInput = document.getElementById("type");
 const editIdInput = document.getElementById("editId");
 
 /* =========================
@@ -53,7 +54,7 @@ function loadResources() {
 
       li.innerHTML = `
         <strong>${r.title}</strong><br>
-        ${r.subject} – ${r.subtopic}<br>
+        ${r.subject} – ${r.subtopic} (${r.type})<br>
         <a href="${r.url}" target="_blank">Open</a><br>
         <button onclick="editLink('${doc.id}')">Edit</button>
         <button onclick="deleteLink('${doc.id}')">Delete</button>
@@ -72,7 +73,8 @@ window.saveLink = function () {
     title: titleInput.value,
     url: urlInput.value,
     subject: subjectInput.value,
-    subtopic: subtopicInput.value
+    subtopic: subtopicInput.value,
+    type: typeInput.value
   };
 
   const id = editIdInput.value;
@@ -93,6 +95,7 @@ window.editLink = function (id) {
     urlInput.value = r.url;
     subjectInput.value = r.subject;
     subtopicInput.value = r.subtopic;
+    typeInput.value = r.type || "video";
     editIdInput.value = id;
   });
 };
@@ -114,5 +117,6 @@ window.clearForm = function () {
   urlInput.value = "";
   subjectInput.value = "";
   subtopicInput.value = "";
+  typeInput.value = "video";
   editIdInput.value = "";
 };

@@ -2,6 +2,7 @@ const list = document.getElementById("list");
 const searchInput = document.getElementById("searchInput");
 const subjectFilter = document.getElementById("subjectFilter");
 const subtopicFilter = document.getElementById("subtopicFilter");
+const typeFilter = document.getElementById("typeFilter");
 
 let resources = [];
 
@@ -51,17 +52,24 @@ function renderList() {
   const search = searchInput.value.toLowerCase();
   const subject = subjectFilter.value;
   const subtopic = subtopicFilter.value;
+  const type = typeFilter.value;
 
   resources
     .filter(r =>
       (subject === "all" || r.subject === subject) &&
       (subtopic === "all" || r.subtopic === subtopic) &&
+      (type === "all" || r.type === type) &&
       r.title.toLowerCase().includes(search)
     )
     .forEach(r => {
+      const icon =
+        r.type === "video" ? "📺" :
+        r.type === "quiz" ? "📝" :
+        "📄";
+
       const li = document.createElement("li");
       li.innerHTML = `
-        <strong>${r.title}</strong><br>
+        <strong>${icon} ${r.title}</strong><br>
         ${r.subject} – ${r.subtopic}<br>
         <a href="${r.url}" target="_blank">Open</a>
       `;
@@ -75,3 +83,4 @@ function renderList() {
 searchInput.addEventListener("input", renderList);
 subjectFilter.addEventListener("change", renderList);
 subtopicFilter.addEventListener("change", renderList);
+typeFilter.addEventListener("change", renderList);
