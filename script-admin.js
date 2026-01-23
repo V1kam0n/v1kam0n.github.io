@@ -1,121 +1,259 @@
+console.log("Script Admin loaded! v7.0 (Final Complete Version)");
+
 // =========================
 // ELEMENTS
 // =========================
-const list = document.getElementById("list");
-const searchInput = document.getElementById("searchInput");
-const subjectFilter = document.getElementById("subjectFilter");
-const topicFilter = document.getElementById("topicFilter");
-const typeFilter = document.getElementById("typeFilter");
-const refreshBtn = document.getElementById("refreshBtn");
+const loginSection = document.getElementById("loginSection");
+const adminContent = document.getElementById("adminContent");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const emailInput = document.getElementById("adminEmail");
+const passwordInput = document.getElementById("adminPassword");
 
-let resources = [];
-let unsubscribe = null;
+// Toggles
+const resourceHeader = document.getElementById("resourceHeader");
+const resourceBody = document.getElementById("resourceBody");
+const platformHeader = document.getElementById("platformHeader");
+const platformBody = document.getElementById("platformBody");
+
+// Resource Inputs
+const resourceSaveBtn = document.getElementById("resourceSaveBtn");
+const resourceCancelBtn = document.getElementById("resourceCancelBtn");
+const adminList = document.getElementById("adminList");
+const titleInput = document.getElementById("title");
+const urlInput = document.getElementById("url");
+const subjectInput = document.getElementById("subject");
+const topicInput = document.getElementById("topic");
+const typeInput = document.getElementById("type");
+
+// Platform Inputs
+const platformSaveBtn = document.getElementById("platformSaveBtn");
+const platformCancelBtn = document.getElementById("platformCancelBtn");
+const adminPlatformList = document.getElementById("adminPlatformList");
+const platNameInput = document.getElementById("platName");
+const platUrlInput = document.getElementById("platUrl");
+const platImgInput = document.getElementById("platImg");
+
+// State Variables (Track what is being edited)
+let editingResourceId = null;
+let editingPlatformId = null;
 
 // =========================
-// LOAD RESOURCES
+// 1. AUTHENTICATION
 // =========================
-loadResources();
+if (auth) {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // User is logged in: Hide Login, Show Admin
+      loginSection.classList.add("d-none");
+      adminContent.classList.remove("d-none");
+      loadResources();
+      loadPlatforms();
+    } else {
+      // User is logged out: Show Login, Hide Admin
+      loginSection.classList.remove("d-none");
+      adminContent.classList.add("d-none");
+    }
+  });
+}
 
+if(loginBtn) {
+  loginBtn.addEventListener("click", () => {
+    const email = emailInput.value;
+    const pass = passwordInput.value;
+    auth.signInWithEmailAndPassword(email, pass)
+      .catch(e => alert("Login Failed: " + e.message));
+  });
+}
+
+if(logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    auth.signOut();
+  });
+}
+
+// =========================
+// 2. TOGGLE SECTIONS
+// =========================
+function toggleSection(header, body) {
+  header.addEventListener("click", () => {
+    body.classList.toggle("hidden");
+    header.classList.toggle("collapsed");
+  });
+}
+
+// Activate toggles if they exist
+if(resourceHeader && resourceBody) toggleSection(resourceHeader, resourceBody);
+if(platformHeader && platformBody) toggleSection(platformHeader, platformBody);
+
+
+// =========================
+// 3. RESOURCE MANAGER
+// =========================
 function loadResources() {
-  if (unsubscribe) unsubscribe();
-
-  unsubscribe = db.collection("links").onSnapshot(snapshot => {
-    resources = [];
-    snapshot.forEach(doc => resources.push(doc.data()));
-
-    updateSubjects();
-    renderList();
+  db.collection("links").onSnapshot(snapshot => {
+    adminList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const r = doc.data();
+      const li = document.createElement("li");
+      
+      // HTML Structure: Text on Left, Buttons on Right
+      li.innerHTML = `
+          <span class="text-content">
+            <strong>${r.title}</strong> <br>
+            <small>${r.subject} &rarr; ${r.topic} (${r.type})</small>
+          </span>
+          
+          <div class="btn-group">
+             <button class="edit-btn">Edit</button>
+             <button class="secondary delete-btn">Delete</button>
+          </div>
+      `;
+      
+      // Attach Events
+      li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
+      li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
+      
+      adminList.appendChild(li);
+    });
   });
 }
 
-// =========================
-// FILTERS
-// =========================
-function updateSubjects() {
-  subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-  [...new Set(resources.map(r => r.subject))].sort().forEach(s => {
-      subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
-  });
-  updateTopics();
+function startEditResource(doc) {
+  const data = doc.data();
+  // Fill form
+  titleInput.value = data.title;
+  urlInput.value = data.url;
+  subjectInput.value = data.subject;
+  topicInput.value = data.topic;
+  typeInput.value = data.type;
+
+  // Set Mode to Edit
+  editingResourceId = doc.id;
+  resourceSaveBtn.innerText = "Update Resource";
+  resourceCancelBtn.classList.remove("d-none");
+  
+  // Show section and scroll
+  resourceBody.classList.remove("hidden");
+  resourceBody.scrollIntoView({ behavior: 'smooth' });
 }
 
-function updateTopics() {
-  const subject = subjectFilter.value;
-  topicFilter.innerHTML = `<option value="all">All Topics</option>`;
+if(resourceCancelBtn) {
+  resourceCancelBtn.addEventListener("click", resetResourceForm);
+}
 
-  let filtered = resources;
-  if (subject !== "all") {
-    filtered = resources.filter(r => r.subject === subject);
+if(resourceSaveBtn) {
+  resourceSaveBtn.addEventListener("click", () => {
+    if (!titleInput.value || !urlInput.value) return alert("Fill all fields");
+
+    const data = {
+      title: titleInput.value,
+      url: urlInput.value,
+      subject: subjectInput.value,
+      topic: topicInput.value,
+      type: typeInput.value
+    };
+
+    if (editingResourceId) {
+      // UPDATE existing
+      db.collection("links").doc(editingResourceId).update(data)
+        .then(resetResourceForm);
+    } else {
+      // ADD new
+      db.collection("links").add(data)
+        .then(resetResourceForm);
+    }
+  });
+}
+
+function resetResourceForm() {
+  titleInput.value = ""; urlInput.value = ""; 
+  subjectInput.value = ""; topicInput.value = "";
+  editingResourceId = null;
+  resourceSaveBtn.innerText = "Save Resource";
+  resourceCancelBtn.classList.add("d-none");
+}
+
+
+// =========================
+// 4. PLATFORM MANAGER
+// =========================
+function loadPlatforms() {
+  db.collection("platforms").onSnapshot(snapshot => {
+    adminPlatformList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      const li = document.createElement("li");
+      
+      li.innerHTML = `
+          <span class="text-content">
+            <strong>${p.name}</strong>
+          </span>
+          <div class="btn-group">
+             <button class="edit-btn">Edit</button>
+             <button class="secondary delete-btn">Delete</button>
+          </div>
+      `;
+      
+      li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('platforms', doc.id));
+      li.querySelector(".edit-btn").addEventListener("click", () => startEditPlatform(doc));
+      
+      adminPlatformList.appendChild(li);
+    });
+  });
+}
+
+function startEditPlatform(doc) {
+  const data = doc.data();
+  platNameInput.value = data.name;
+  platUrlInput.value = data.url;
+  platImgInput.value = data.image || "";
+
+  editingPlatformId = doc.id;
+  platformSaveBtn.innerText = "Update Platform";
+  platformCancelBtn.classList.remove("d-none");
+  
+  platformBody.classList.remove("hidden");
+  platformBody.scrollIntoView({ behavior: 'smooth' });
+}
+
+if(platformCancelBtn) {
+  platformCancelBtn.addEventListener("click", resetPlatformForm);
+}
+
+if(platformSaveBtn) {
+  platformSaveBtn.addEventListener("click", () => {
+    if (!platNameInput.value || !platUrlInput.value) return alert("Fill Name and URL");
+
+    const data = {
+      name: platNameInput.value,
+      url: platUrlInput.value,
+      image: platImgInput.value || "https://placehold.co/600x400?text=No+Image"
+    };
+
+    if (editingPlatformId) {
+      db.collection("platforms").doc(editingPlatformId).update(data)
+        .then(resetPlatformForm);
+    } else {
+      db.collection("platforms").add(data)
+        .then(resetPlatformForm);
+    }
+  });
+}
+
+function resetPlatformForm() {
+  platNameInput.value = ""; platUrlInput.value = ""; platImgInput.value = "";
+  editingPlatformId = null;
+  platformSaveBtn.innerText = "Save Platform";
+  platformCancelBtn.classList.add("d-none");
+}
+
+
+// =========================
+// UTILS
+// =========================
+function deleteDoc(collection, id) {
+  if (confirm("Are you sure you want to delete this item?")) {
+    db.collection(collection).doc(id).delete();
   }
-
-  [...new Set(filtered.map(r => r.topic))].sort().forEach(t => {
-      topicFilter.innerHTML += `<option value="${t}">${t}</option>`;
-  });
-}
-
-// =========================
-// RENDER LIST (Cleaned)
-// =========================
-function renderList() {
-  list.innerHTML = "";
-
-  const search = searchInput.value.toLowerCase();
-  const subject = subjectFilter.value;
-  const topic = topicFilter.value;
-  const type = typeFilter.value;
-
-  const results = resources.filter(r =>
-    (subject === "all" || r.subject === subject) &&
-    (topic === "all" || r.topic === topic) &&
-    (type === "all" || r.type === type) &&
-    r.title.toLowerCase().includes(search)
-  );
-
-  if (results.length === 0) {
-    list.innerHTML = `<li>No resources found.</li>`;
-    return;
-  }
-
-  results.forEach(r => {
-    const icon =
-      r.type === "video" ? "📺" :
-      r.type === "quiz" ? "📝" :
-      "📄";
-
-    const li = document.createElement("li");
-    
-    // THIS IS THE CLEAN VERSION
-    // It only has the Title (left) and the Link (right)
-    li.innerHTML = `
-      <strong>${icon} ${r.title}</strong>
-      <a href="${r.url}" target="_blank">Open</a>
-    `;
-    
-    list.appendChild(li);
-  });
-}
-
-// =========================
-// EVENTS
-// =========================
-if(subjectFilter) {
-  subjectFilter.addEventListener("change", () => {
-    topicFilter.value = "all";
-    updateTopics();
-    renderList();
-  });
-}
-if(topicFilter) topicFilter.addEventListener("change", renderList);
-if(typeFilter) typeFilter.addEventListener("change", renderList);
-if(searchInput) searchInput.addEventListener("input", renderList);
-
-if(refreshBtn) {
-  refreshBtn.addEventListener("click", () => {
-    searchInput.value = "";
-    subjectFilter.value = "all";
-    topicFilter.value = "all";
-    typeFilter.value = "all";
-    updateTopics();
-    renderList();
-  });
 }

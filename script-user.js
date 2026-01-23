@@ -29,21 +29,19 @@ function loadResources() {
 }
 
 // =========================
-// FILTERS (SUBJECT / TOPIC)
+// FILTERS
 // =========================
 function updateSubjects() {
+  if (!subjectFilter) return;
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-
-  [...new Set(resources.map(r => r.subject))]
-    .sort()
-    .forEach(s => {
+  [...new Set(resources.map(r => r.subject))].sort().forEach(s => {
       subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
-    });
-
+  });
   updateTopics();
 }
 
 function updateTopics() {
+  if (!topicFilter) return;
   const subject = subjectFilter.value;
   topicFilter.innerHTML = `<option value="all">All Topics</option>`;
 
@@ -52,23 +50,22 @@ function updateTopics() {
     filtered = resources.filter(r => r.subject === subject);
   }
 
-  [...new Set(filtered.map(r => r.topic))]
-    .sort()
-    .forEach(t => {
+  [...new Set(filtered.map(r => r.topic))].sort().forEach(t => {
       topicFilter.innerHTML += `<option value="${t}">${t}</option>`;
-    });
+  });
 }
 
 // =========================
-// RENDER LIST
+// RENDER LIST (Cleaned)
 // =========================
 function renderList() {
+  if (!list) return;
   list.innerHTML = "";
 
-  const search = searchInput.value.toLowerCase();
-  const subject = subjectFilter.value;
-  const topic = topicFilter.value;
-  const type = typeFilter.value;
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
+  const subject = subjectFilter ? subjectFilter.value : "all";
+  const topic = topicFilter ? topicFilter.value : "all";
+  const type = typeFilter ? typeFilter.value : "all";
 
   const results = resources.filter(r =>
     (subject === "all" || r.subject === subject) &&
@@ -89,11 +86,16 @@ function renderList() {
       "📄";
 
     const li = document.createElement("li");
+    
+    // --- THIS IS THE FIX ---
+    // Only 2 items: Title (left) and Open Button (right)
     li.innerHTML = `
-      <strong>${icon} ${r.title}</strong><br>
-      ${r.subject} → ${r.topic}<br>
-      <a href="${r.url}" target="_blank">Open</a>
+      <span style="font-weight: bold;">${icon} ${r.title}</span>
+      <a href="${r.url}" target="_blank">
+        <button class="secondary" style="margin:0; padding: 6px 12px;">Open</button>
+      </a>
     `;
+    
     list.appendChild(li);
   });
 }
@@ -101,21 +103,24 @@ function renderList() {
 // =========================
 // EVENTS
 // =========================
-subjectFilter.addEventListener("change", () => {
-  topicFilter.value = "all";
-  updateTopics();
-  renderList();
-});
+if(subjectFilter) {
+  subjectFilter.addEventListener("change", () => {
+    if(topicFilter) topicFilter.value = "all";
+    updateTopics();
+    renderList();
+  });
+}
+if(topicFilter) topicFilter.addEventListener("change", renderList);
+if(typeFilter) typeFilter.addEventListener("change", renderList);
+if(searchInput) searchInput.addEventListener("input", renderList);
 
-topicFilter.addEventListener("change", renderList);
-typeFilter.addEventListener("change", renderList);
-searchInput.addEventListener("input", renderList);
-
-refreshBtn.addEventListener("click", () => {
-  searchInput.value = "";
-  subjectFilter.value = "all";
-  topicFilter.value = "all";
-  typeFilter.value = "all";
-  updateTopics();
-  renderList();
-});
+if(refreshBtn) {
+  refreshBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    subjectFilter.value = "all";
+    topicFilter.value = "all";
+    typeFilter.value = "all";
+    updateTopics();
+    renderList();
+  });
+}
