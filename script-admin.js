@@ -4,6 +4,10 @@
 const loginSection = document.getElementById("loginSection");
 const adminContent = document.getElementById("adminContent");
 
+// Login Inputs
+const emailInput = document.getElementById("adminEmail");
+const passwordInput = document.getElementById("adminPassword");
+
 // Resource Inputs
 const adminList = document.getElementById("adminList");
 const titleInput = document.getElementById("title");
@@ -20,7 +24,6 @@ const platUrlInput = document.getElementById("platUrl");
 // =========================
 // 1. AUTHENTICATION
 // =========================
-// Listen for login state changes
 auth.onAuthStateChanged(user => {
   if (user) {
     // User is logged in
@@ -35,9 +38,12 @@ auth.onAuthStateChanged(user => {
   }
 });
 
-function loginWithGoogle() {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(error => alert(error.message));
+function loginWithEmail() {
+  const email = emailInput.value;
+  const pass = passwordInput.value;
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(error => alert("Login Failed: " + error.message));
 }
 
 function logout() {
@@ -75,7 +81,6 @@ function saveLink() {
     topic: topicInput.value,
     type: typeInput.value
   }).then(() => {
-    // Clear inputs
     titleInput.value = "";
     urlInput.value = "";
     subjectInput.value = "";
@@ -111,7 +116,6 @@ function savePlatform() {
     name: platNameInput.value,
     url: platUrlInput.value
   }).then(() => {
-    // Clear inputs
     platNameInput.value = "";
     platUrlInput.value = "";
   }).catch(err => alert("Error: " + err.message));

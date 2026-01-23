@@ -4,7 +4,6 @@
   <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Simple utility to hide elements */
     .hidden { display: none; }
   </style>
 </head>
@@ -15,15 +14,19 @@
 </header>
 
 <section id="loginSection" class="card" style="text-align: center;">
-  <p>Please log in to manage resources.</p>
-  <button onclick="loginWithGoogle()">🔑 Login with Google</button>
-  <a href="index.html"><button class="secondary" style="margin-top: 10px;">⬅ Back to Home</button></a>
+  <h2>Admin Login</h2>
+  <input id="adminEmail" type="email" placeholder="Email Address">
+  <input id="adminPassword" type="password" placeholder="Password">
+  <button onclick="loginWithEmail()">Login</button>
+  
+  <br><br>
+  <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
 </section>
 
 <div id="adminContent" class="hidden">
   
   <section class="card" style="text-align: center;">
-    <p>Welcome, Admin!</p>
+    <p>Logged in as Admin</p>
     <button class="secondary" onclick="logout()">Sign Out</button>
     <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
   </section>
