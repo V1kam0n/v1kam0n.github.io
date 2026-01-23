@@ -1,21 +1,14 @@
-const platformList = document.getElementById("platformList");
+const list = document.getElementById("platformList");
 
 db.collection("platforms").onSnapshot(snapshot => {
-  platformList.innerHTML = "";
-
+  list.innerHTML = "";
   snapshot.forEach(doc => {
     const p = doc.data();
-
-    const card = document.createElement("a");
-    card.href = p.url;
-    card.target = "_blank";
-    card.className = "platform-card";
-
-    card.innerHTML = `
-      <img src="${p.logo}" alt="${p.name}">
-      <h3>${p.name}</h3>
+    list.innerHTML += `
+      <li>
+        <strong>${p.name}</strong><br>
+        <a href="${p.url}" target="_blank">Visit</a>
+      </li>
     `;
-
-    platformList.appendChild(card);
   });
 });

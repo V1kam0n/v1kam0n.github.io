@@ -1,213 +1,70 @@
 body {
-  background: red !important;
-}
-
-/* =========================
-   RESET
-========================= */
-* {
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
   margin: 0;
-  padding: 20px;
-  background: #f0f2f5;
+  font-family: Arial, sans-serif;
+  background: url("library-bg.jpg") no-repeat center center fixed;
+  background-size: cover;
   color: #222;
 }
 
-/* =========================
-   HEADER
-========================= */
 .header {
   text-align: center;
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 2.2em;
+  padding: 20px;
+  color: white;
 }
 
 .subtitle {
-  color: #555;
-  margin-top: 6px;
+  opacity: 0.9;
 }
 
-/* =========================
-   LINKS
-========================= */
-.admin-link {
-  display: inline-block;
-  margin-bottom: 10px;
-  color: #2b6cb0;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.admin-link:hover {
-  text-decoration: underline;
-}
-
-/* PLATFORM LINK BUTTON */
-.platform-link {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 8px 14px;
-  background: #2b6cb0;
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.platform-link:hover {
-  background: #234e82;
-}
-
-/* =========================
-   CARD LAYOUT
-========================= */
 .card {
-  background: white;
-  padding: 16px;
-  border-radius: 10px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  background: rgba(255, 255, 255, 0.95);
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* =========================
-   FORM ELEMENTS
-========================= */
-input,
-select {
+input, select, button {
   width: 100%;
-  padding: 10px;
   margin: 6px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+  padding: 10px;
+  font-size: 16px;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #2b6cb0;
-}
-
-/* =========================
-   BUTTONS
-========================= */
 button {
-  padding: 10px 14px;
-  margin-top: 8px;
+  cursor: pointer;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  background: #2b6cb0;
+  background: #2563eb;
   color: white;
-}
-
-button:hover {
-  background: #234e82;
 }
 
 button.secondary {
   background: #6b7280;
 }
 
-button.secondary:hover {
-  background: #4b5563;
-}
-
-/* =========================
-   LISTS
-========================= */
 ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
 
 li {
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
 }
 
-li:last-child {
-  border-bottom: none;
-}
-
-li button {
-  margin-right: 6px;
-}
-
-/* =========================
-   RESOURCE LIST (INDEX)
-========================= */
-#list li a {
-  color: #2b6cb0;
+a {
+  color: #2563eb;
   text-decoration: none;
 }
 
-#list li a:hover {
-  text-decoration: underline;
-}
-
-/* =========================
-   PLATFORM CARDS
-========================= */
-.platform-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-}
-
-.platform-card {
-  background: #f9f9f9;
-  padding: 16px;
-  border-radius: 10px;
-  text-align: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.platform-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.platform-card img {
-  max-width: 80px;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.platform-card h3 {
-  margin: 0;
-  font-size: 16px;
-}
-
-/* =========================
-   ADMIN PANEL
-========================= */
-#adminPanel input,
-#adminPanel select {
-  margin-bottom: 8px;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 600px) {
-  body {
-    padding: 12px;
-  }
-
-  .header h1 {
-    font-size: 1.8em;
-  }
+.admin-link {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: black;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
 }

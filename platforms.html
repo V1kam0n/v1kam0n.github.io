@@ -1,38 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Learning Platforms</title>
+  <title>Platforms</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<a href="index.html" class="admin-link">⬅ Back to Home</a>
-
 <div class="header">
   <h1>🌐 Learning Platforms</h1>
-  <p class="subtitle">External learning websites</p>
 </div>
 
 <section class="card">
-  <div id="platformList" class="platform-grid"></div>
+  <ul id="platformList"></ul>
 </section>
 
-<!-- Firebase -->
+<a href="index.html" class="card">⬅ Back</a>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
 <script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
-    authDomain: "wiselearn-7f2ec.firebaseapp.com",
-    projectId: "wiselearn-7f2ec"
-  });
-
-  const db = firebase.firestore();
+firebase.initializeApp({
+  apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
+  authDomain: "wiselearn-7f2ec.firebaseapp.com",
+  projectId: "wiselearn-7f2ec"
+});
+const db = firebase.firestore();
 </script>
 
 <script src="script-platforms.js"></script>
 </body>
 </html>
-    

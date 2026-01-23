@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>WISELearn</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -12,24 +11,13 @@
 <div class="header">
   <h1>📘 WISELearn</h1>
   <p class="subtitle">Smart learning resources</p>
-
-  <!-- LINK TO PLATFORMS -->
-  <a href="platforms.html" class="platform-link">
-    🌐 Learning Platforms
-  </a>
 </div>
 
 <section class="card">
-  <input id="searchInput" placeholder="Search resources..." />
+  <input id="searchInput" placeholder="Search...">
 
-  <select id="subjectFilter">
-    <option value="all">All Subjects</option>
-  </select>
-
-  <select id="topicFilter">
-    <option value="all">All Topics</option>
-  </select>
-
+  <select id="subjectFilter"></select>
+  <select id="topicFilter"></select>
   <select id="typeFilter">
     <option value="all">All Types</option>
     <option value="video">Video</option>
@@ -37,27 +25,28 @@
     <option value="note">Note</option>
   </select>
 
-  <button id="refreshBtn" type="button" class="secondary">🔄 Refresh</button>
+  <button id="refreshBtn" class="secondary">🔄 Refresh</button>
 </section>
 
 <section class="card">
   <ul id="list"></ul>
 </section>
 
+<a href="platforms.html" class="card">🌐 Learning Platforms</a>
+
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
 <script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
-    authDomain: "wiselearn-7f2ec.firebaseapp.com",
-    projectId: "wiselearn-7f2ec"
-  });
-
-  const db = firebase.firestore();
+firebase.initializeApp({
+  apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
+  authDomain: "wiselearn-7f2ec.firebaseapp.com",
+  projectId: "wiselearn-7f2ec"
+});
+const db = firebase.firestore();
 </script>
 
-<script src="script-user.js?v=3"></script>
+<script src="script-user.js"></script>
 </body>
 </html>
