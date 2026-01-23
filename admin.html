@@ -14,25 +14,35 @@
   <button id="loginBtn">Login</button>
 </section>
 
-<section id="adminPanel" class="card" style="display:none;">
-  <h2>Add Resource</h2>
+<section id="adminPanel" style="display:none;">
 
-  <input id="title" placeholder="Title">
-  <input id="url" placeholder="URL (https://...)">
-  <input id="subject" placeholder="Subject">
-  <input id="subtopic" placeholder="Topic">
+  <div class="card">
+    <h2>Add / Edit Resource</h2>
 
-  <select id="type">
-    <option value="video">🎥 Video</option>
-    <option value="notes">📝 Notes</option>
-    <option value="quiz">🧠 Quiz</option>
-  </select>
+    <input id="title" placeholder="Title">
+    <input id="url" placeholder="URL">
+    <input id="subject" placeholder="Subject">
+    <input id="subtopic" placeholder="Topic">
 
-  <button id="addBtn">Add Resource</button>
-  <button id="logoutBtn" class="secondary">Logout</button>
+    <select id="type">
+      <option value="video">🎥 Video</option>
+      <option value="notes">📝 Notes</option>
+      <option value="quiz">🧠 Quiz</option>
+    </select>
+
+    <button id="saveBtn">Save</button>
+    <button id="cancelBtn" class="secondary" style="display:none;">Cancel Edit</button>
+    <button id="logoutBtn" class="secondary">Logout</button>
+  </div>
+
+  <div class="card">
+    <h2>All Resources</h2>
+    <ul id="adminList"></ul>
+  </div>
+
 </section>
 
-<!-- Firebase COMPAT -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
