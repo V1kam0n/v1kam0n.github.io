@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let resources = [];
 
   /* =========================
-     LOAD DATA FROM FIREBASE
+     LOAD DATA
   ========================= */
   db.collection("links").onSnapshot(snapshot => {
     resources = [];
@@ -18,38 +18,30 @@ document.addEventListener("DOMContentLoaded", () => {
       resources.push(doc.data());
     });
 
-    updateFilters();
+    populateFilters();
     renderList();
   });
 
   /* =========================
-     UPDATE SUBJECT + TOPIC
+     FILTER DROPDOWNS
   ========================= */
-  function updateFilters() {
-    // SUBJECTS
+  function populateFilters() {
+    const subjects = new Set();
+    const subtopics = new Set();
+
+    resources.forEach(r => {
+      subjects.add(r.subject);
+      subtopics.add(r.subtopic);
+    });
+
     subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-    [...new Set(resources.map(r => r.subject))].forEach(s => {
+    subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
+
+    subjects.forEach(s => {
       subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
     });
 
-    // TOPICS depend on subject
-    updateSubtopics();
-  }
-
-  function updateSubtopics() {
-    const selectedSubject = subjectFilter.value;
-
-    subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
-
-    let filteredResources = resources;
-
-    if (selectedSubject !== "all") {
-      filteredResources = resources.filter(
-        r => r.subject === selectedSubject
-      );
-    }
-
-    [...new Set(filteredResources.map(r => r.subtopic))].forEach(t => {
+    subtopics.forEach(t => {
       subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
     });
   }
@@ -91,25 +83,17 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      EVENTS
   ========================= */
-
-  // 🔁 Subject change → update topics
-  subjectFilter.addEventListener("change", () => {
-    updateSubtopics();
-    subtopicFilter.value = "all"; // reset topic
-    renderList();
-  });
-
+  searchInput.addEventListener("input", renderList);
+  subjectFilter.addEventListener("change", renderList);
   subtopicFilter.addEventListener("change", renderList);
   typeFilter.addEventListener("change", renderList);
-  searchInput.addEventListener("input", renderList);
 
-  // 🔄 Refresh button
+  // 🔄 REFRESH BUTTON (GUARANTEED)
   refreshBtn.addEventListener("click", () => {
     searchInput.value = "";
     subjectFilter.value = "all";
-    typeFilter.value = "all";
-    updateSubtopics();
     subtopicFilter.value = "all";
+    typeFilter.value = "all";
     renderList();
   });
 
