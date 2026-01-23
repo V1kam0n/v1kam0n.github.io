@@ -1,3 +1,8 @@
+const subjectFilter = document.getElementById("subjectFilter");
+const subtopicFilter = document.getElementById("subtopicFilter");
+const list = document.getElementById("list");
+const searchInput = document.getElementById("searchInput");
+
 let resources = [];
 
 /* =========================
@@ -19,7 +24,7 @@ function display(data) {
   data.forEach(r => {
     const li = document.createElement("li");
 
-    const iconMap = {
+    const icons = {
       video: "🎥",
       notes: "📝",
       quiz: "🧠"
@@ -28,7 +33,7 @@ function display(data) {
     const a = document.createElement("a");
     a.href = r.url;
     a.target = "_blank";
-    a.textContent = `${iconMap[r.type] || "📘"} ${r.title} (${r.subject} – ${r.subtopic})`;
+    a.textContent = `${icons[r.type] || "📘"} ${r.title} (${r.subject} – ${r.subtopic})`;
 
     li.appendChild(a);
     list.appendChild(li);
@@ -36,12 +41,12 @@ function display(data) {
 }
 
 /* =========================
-   FILTERS
+   FILTER LOGIC
    ========================= */
 function applyFilters() {
   const subject = subjectFilter.value;
   const topic = subtopicFilter.value;
-  const search = searchInput ? searchInput.value.toLowerCase() : "";
+  const search = searchInput.value.toLowerCase();
 
   const filtered = resources.filter(r =>
     (subject === "all" || r.subject === subject) &&
@@ -57,10 +62,9 @@ function applyFilters() {
 }
 
 /* =========================
-   DROPDOWN UPDATES
+   DROPDOWNS
    ========================= */
 function updateFilters() {
-  // Subjects
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
   [...new Set(resources.map(r => r.subject))].forEach(s => {
     subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
@@ -70,13 +74,12 @@ function updateFilters() {
 }
 
 function updateSubtopics() {
-  const selectedSubject = subjectFilter.value;
+  const selected = subjectFilter.value;
   subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
 
   let filtered = resources;
-
-  if (selectedSubject !== "all") {
-    filtered = resources.filter(r => r.subject === selectedSubject);
+  if (selected !== "all") {
+    filtered = resources.filter(r => r.subject === selected);
   }
 
   [...new Set(filtered.map(r => r.subtopic))].forEach(t => {
@@ -89,12 +92,9 @@ function updateSubtopics() {
    ========================= */
 subjectFilter.addEventListener("change", () => {
   updateSubtopics();
-  subtopicFilter.value = "all"; // reset topic
+  subtopicFilter.value = "all";
   applyFilters();
 });
 
 subtopicFilter.addEventListener("change", applyFilters);
-
-if (typeof searchInput !== "undefined") {
-  searchInput.addEventListener("input", applyFilters);
-}
+searchInput.addEventListener("input", applyFilters);
