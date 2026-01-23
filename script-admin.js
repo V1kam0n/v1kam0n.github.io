@@ -1,4 +1,4 @@
-console.log("Script Admin loaded! v4.0 (Flexbox Fixed)");
+console.log("Script Admin loaded! v5.0 (Final Fix)");
 
 // =========================
 // ELEMENTS
@@ -34,23 +34,21 @@ const platNameInput = document.getElementById("platName");
 const platUrlInput = document.getElementById("platUrl");
 const platImgInput = document.getElementById("platImg");
 
-// State Variables
+// State
 let editingResourceId = null;
 let editingPlatformId = null;
 
 // =========================
-// 1. AUTHENTICATION & TOGGLES
+// 1. AUTH & TOGGLES
 // =========================
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      // Hide Login, Show Admin
       loginSection.classList.add("d-none");
       adminContent.classList.remove("d-none");
       loadResources();
       loadPlatforms();
     } else {
-      // Show Login, Hide Admin
       loginSection.classList.remove("d-none");
       adminContent.classList.add("d-none");
     }
@@ -64,7 +62,6 @@ if(loginBtn) loginBtn.addEventListener("click", () => {
 
 if(logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
 
-// Toggle Sections
 function toggleSection(header, body) {
   header.addEventListener("click", () => {
     body.classList.toggle("hidden");
@@ -76,7 +73,7 @@ if(platformHeader) toggleSection(platformHeader, platformBody);
 
 
 // =========================
-// 2. RESOURCE MANAGER (Layout Update)
+// 2. RESOURCE MANAGER
 // =========================
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
@@ -85,20 +82,17 @@ function loadResources() {
       const r = doc.data();
       const li = document.createElement("li");
       
-      // NEW STRUCTURE: Text on Left, Buttons on Right
       li.innerHTML = `
           <span class="text-content">
             <strong>${r.title}</strong> <br>
             <small>${r.subject} &rarr; ${r.topic} (${r.type})</small>
           </span>
-          
           <div class="btn-group">
              <button class="edit-btn">Edit</button>
              <button class="secondary delete-btn">Delete</button>
           </div>
       `;
       
-      // Attach Events
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
       li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
       
@@ -118,7 +112,7 @@ function startEditResource(doc) {
   editingResourceId = doc.id;
   resourceSaveBtn.innerText = "Update Resource";
   resourceCancelBtn.classList.remove("d-none");
-  resourceBody.classList.remove("hidden"); 
+  resourceBody.classList.remove("hidden");
   resourceBody.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -151,7 +145,7 @@ function resetResourceForm() {
 }
 
 // =========================
-// 3. PLATFORM MANAGER (Layout Update)
+// 3. PLATFORM MANAGER
 // =========================
 function loadPlatforms() {
   db.collection("platforms").onSnapshot(snapshot => {
@@ -187,7 +181,7 @@ function startEditPlatform(doc) {
   editingPlatformId = doc.id;
   platformSaveBtn.innerText = "Update Platform";
   platformCancelBtn.classList.remove("d-none");
-  platformBody.classList.remove("hidden"); 
+  platformBody.classList.remove("hidden");
   platformBody.scrollIntoView({ behavior: 'smooth' });
 }
 
