@@ -42,6 +42,13 @@ window.logout = function () {
 };
 
 /* =========================
+   BACK TO HOME
+========================= */
+window.goHome = function () {
+  window.location.replace("index.html");
+};
+
+/* =========================
    LOAD RESOURCES
 ========================= */
 function loadResources() {
@@ -55,7 +62,6 @@ function loadResources() {
       li.innerHTML = `
         <strong>${r.title}</strong><br>
         ${r.subject} – ${r.subtopic} (${r.type})<br>
-        <a href="${r.url}" target="_blank">Open</a><br>
         <button onclick="editLink('${doc.id}')">Edit</button>
         <button onclick="deleteLink('${doc.id}')">Delete</button>
       `;
@@ -95,7 +101,7 @@ window.editLink = function (id) {
     urlInput.value = r.url;
     subjectInput.value = r.subject;
     subtopicInput.value = r.subtopic;
-    typeInput.value = r.type || "video";
+    typeInput.value = r.type;
     editIdInput.value = id;
   });
 };
@@ -119,8 +125,4 @@ window.clearForm = function () {
   subtopicInput.value = "";
   typeInput.value = "video";
   editIdInput.value = "";
-};
-
-window.goHome = function () {
-  window.location.href = "index.html";
 };
