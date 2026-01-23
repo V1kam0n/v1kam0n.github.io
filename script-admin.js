@@ -29,17 +29,13 @@ function loadResources() {
 }
 
 // =========================
-// FILTERS (SUBJECT / TOPIC)
+// FILTERS
 // =========================
 function updateSubjects() {
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-
-  [...new Set(resources.map(r => r.subject))]
-    .sort()
-    .forEach(s => {
+  [...new Set(resources.map(r => r.subject))].sort().forEach(s => {
       subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
-    });
-
+  });
   updateTopics();
 }
 
@@ -52,15 +48,13 @@ function updateTopics() {
     filtered = resources.filter(r => r.subject === subject);
   }
 
-  [...new Set(filtered.map(r => r.topic))]
-    .sort()
-    .forEach(t => {
+  [...new Set(filtered.map(r => r.topic))].sort().forEach(t => {
       topicFilter.innerHTML += `<option value="${t}">${t}</option>`;
-    });
+  });
 }
 
 // =========================
-// RENDER LIST (Updated)
+// RENDER LIST (Cleaned)
 // =========================
 function renderList() {
   list.innerHTML = "";
@@ -90,9 +84,8 @@ function renderList() {
 
     const li = document.createElement("li");
     
-    // --- CHANGE IS HERE ---
-    // I removed the line that showed "Subject -> Topic"
-    // Now it just shows Title (Left) and Open (Right)
+    // THIS IS THE CLEAN VERSION
+    // It only has the Title (left) and the Link (right)
     li.innerHTML = `
       <strong>${icon} ${r.title}</strong>
       <a href="${r.url}" target="_blank">Open</a>
@@ -112,7 +105,6 @@ if(subjectFilter) {
     renderList();
   });
 }
-
 if(topicFilter) topicFilter.addEventListener("change", renderList);
 if(typeFilter) typeFilter.addEventListener("change", renderList);
 if(searchInput) searchInput.addEventListener("input", renderList);
