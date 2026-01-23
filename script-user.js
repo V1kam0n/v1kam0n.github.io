@@ -1,100 +1,120 @@
-const subjectFilter = document.getElementById("subjectFilter");
-const subtopicFilter = document.getElementById("subtopicFilter");
-const list = document.getElementById("list");
-const searchInput = document.getElementById("searchInput");
+const auth = firebase.auth();
 
-let resources = [];
+const loginCard = document.getElementById("loginCard");
+const adminPanel = document.getElementById("adminPanel");
+const resourceList = document.getElementById("resourceList");
+const adminList = document.getElementById("adminList");
+
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+const titleInput = document.getElementById("title");
+const urlInput = document.getElementById("url");
+const subjectInput = document.getElementById("subject");
+const subtopicInput = document.getElementById("subtopic");
+const editIdInput = document.getElementById("editId");
 
 /* =========================
-   LOAD DATA
+   AUTH STATE
    ========================= */
-db.collection("links").onSnapshot(snapshot => {
-  resources = [];
-  snapshot.forEach(doc => resources.push(doc.data()));
-  updateFilters();
-  applyFilters();
+auth.onAuthStateChanged(user => {
+  if (user) {
+    loginCard.style.display = "none";
+    adminPanel.style.display = "block";
+    resourceList.style.display = "block";
+    loadResources();
+  } else {
+    loginCard.style.display = "block";
+    adminPanel.style.display = "none";
+    resourceList.style.display = "none";
+  }
 });
 
 /* =========================
-   DISPLAY
+   LOGIN / LOGOUT
    ========================= */
-function display(data) {
-  list.innerHTML = "";
+window.login = function () {
+  auth.signInWithEmailAndPassword(email.value, password.value)
+    .catch(err => alert(err.message));
+};
 
-  data.forEach(r => {
-    const li = document.createElement("li");
+window.logout = function () {
+  auth.signOut();
+};
 
-    const icons = {
-      video: "🎥",
-      notes: "📝",
-      quiz: "🧠"
-    };
+/* =========================
+   LOAD RESOURCES
+   ========================= */
+function loadResources() {
+  db.collection("links").onSnapshot(snapshot => {
+    adminList.innerHTML = "";
 
-    const a = document.createElement("a");
-    a.href = r.url;
-    a.target = "_blank";
-    a.textContent = `${icons[r.type] || "📘"} ${r.title} (${r.subject} – ${r.subtopic})`;
+    snapshot.forEach(doc => {
+      const r = doc.data();
+      const li = document.createElement("li");
 
-    li.appendChild(a);
-    list.appendChild(li);
+      li.innerHTML = `
+        <strong>${r.title}</strong><br>
+        ${r.subject} – ${r.subtopic}<br>
+        <a href="${r.url}" target="_blank">Open</a><br>
+        <button onclick="editLink('${doc.id}')">Edit</button>
+        <button onclick="deleteLink('${doc.id}')">Delete</button>
+      `;
+
+      adminList.appendChild(li);
+    });
   });
 }
 
 /* =========================
-   FILTER LOGIC
+   SAVE / EDIT
    ========================= */
-function applyFilters() {
-  const subject = subjectFilter.value;
-  const topic = subtopicFilter.value;
-  const search = searchInput.value.toLowerCase();
+window.saveLink = function () {
+  const data = {
+    title: titleInput.value,
+    url: urlInput.value,
+    subject: subjectInput.value,
+    subtopic: subtopicInput.value
+  };
 
-  const filtered = resources.filter(r =>
-    (subject === "all" || r.subject === subject) &&
-    (topic === "all" || r.subtopic === topic) &&
-    (
-      r.title.toLowerCase().includes(search) ||
-      r.subject.toLowerCase().includes(search) ||
-      r.subtopic.toLowerCase().includes(search)
-    )
-  );
+  const id = editIdInput.value;
 
-  display(filtered);
-}
-
-/* =========================
-   DROPDOWNS
-   ========================= */
-function updateFilters() {
-  subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-  [...new Set(resources.map(r => r.subject))].forEach(s => {
-    subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
-  });
-
-  updateSubtopics();
-}
-
-function updateSubtopics() {
-  const selected = subjectFilter.value;
-  subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
-
-  let filtered = resources;
-  if (selected !== "all") {
-    filtered = resources.filter(r => r.subject === selected);
+  if (id) {
+    db.collection("links").doc(id).update(data);
+  } else {
+    db.collection("links").add(data);
   }
 
-  [...new Set(filtered.map(r => r.subtopic))].forEach(t => {
-    subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
+  clearForm();
+};
+
+window.editLink = function (id) {
+  db.collection("links").doc(id).get().then(doc => {
+    const r = doc.data();
+    titleInput.value = r.title;
+    urlInput.value = r.url;
+    subjectInput.value = r.subject;
+    subtopicInput.value = r.subtopic;
+    editIdInput.value = id;
   });
-}
+};
 
 /* =========================
-   EVENTS
+   DELETE
    ========================= */
-subjectFilter.addEventListener("change", () => {
-  updateSubtopics();
-  subtopicFilter.value = "all";
-  applyFilters();
-});
+window.deleteLink = function (id) {
+  if (confirm("Delete this resource?")) {
+    db.collection("links").doc(id).delete();
+  }
+};
 
-subtopicFilter.addEventListener("change", applyFilters);
-searchInput.addEventListener("input", applyFilters);
+/* =========================
+   CLEAR
+   ========================= */
+window.clearForm = function () {
+  titleInput.value = "";
+  urlInput.value = "";
+  subjectInput.value = "";
+  subtopicInput.value = "";
+  editIdInput.value = "";
+};
