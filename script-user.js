@@ -1,3 +1,4 @@
+const refreshBtn = document.getElementById("refreshBtn");
 const list = document.getElementById("list");
 const searchInput = document.getElementById("searchInput");
 const subjectFilter = document.getElementById("subjectFilter");
@@ -84,3 +85,11 @@ searchInput.addEventListener("input", renderList);
 subjectFilter.addEventListener("change", renderList);
 subtopicFilter.addEventListener("change", renderList);
 typeFilter.addEventListener("change", renderList);
+
+refreshBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  subjectFilter.value = "all";
+  subtopicFilter.value = "all";
+  typeFilter.value = "all";
+  renderList();
+});

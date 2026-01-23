@@ -120,3 +120,7 @@ window.clearForm = function () {
   typeInput.value = "video";
   editIdInput.value = "";
 };
+
+window.goHome = function () {
+  window.location.href = "index.html";
+};
