@@ -1,61 +1,62 @@
 const loginCard = document.getElementById("loginCard");
 const adminPanel = document.getElementById("adminPanel");
+const resourceList = document.getElementById("resourceList");
+const adminList = document.getElementById("adminList");
 
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 
-const title = document.getElementById("title");
-const url = document.getElementById("url");
-const subject = document.getElementById("subject");
-const subtopic = document.getElementById("subtopic");
-const type = document.getElementById("type");
-
-const loginBtn = document.getElementById("loginBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-const saveBtn = document.getElementById("saveBtn");
-const cancelBtn = document.getElementById("cancelBtn");
-
-const adminList = document.getElementById("adminList");
-
-let editId = null;
+const titleInput = document.getElementById("title");
+const urlInput = document.getElementById("url");
+const subjectInput = document.getElementById("subject");
+const subtopicInput = document.getElementById("subtopic");
+const editIdInput = document.getElementById("editId");
 
 /* =========================
-   AUTH
-   ========================= */
+   AUTH STATE
+========================= */
 auth.onAuthStateChanged(user => {
   if (user) {
     loginCard.style.display = "none";
     adminPanel.style.display = "block";
+    resourceList.style.display = "block";
     loadResources();
   } else {
     loginCard.style.display = "block";
     adminPanel.style.display = "none";
+    resourceList.style.display = "none";
   }
 });
 
-loginBtn.addEventListener("click", () => {
+/* =========================
+   LOGIN / LOGOUT
+========================= */
+window.login = function () {
   auth.signInWithEmailAndPassword(email.value, password.value)
     .catch(err => alert(err.message));
-});
+};
 
-logoutBtn.addEventListener("click", () => auth.signOut());
+window.logout = function () {
+  auth.signOut();
+};
 
 /* =========================
-   LOAD LIST
-   ========================= */
+   LOAD RESOURCES
+========================= */
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
     adminList.innerHTML = "";
+
     snapshot.forEach(doc => {
       const r = doc.data();
       const li = document.createElement("li");
 
       li.innerHTML = `
         <strong>${r.title}</strong><br>
-        ${r.subject} – ${r.subtopic} (${r.type})
-        <br>
-        <button onclick="editResource('${doc.id}')">Edit</button>
-        <button onclick="deleteResource('${doc.id}')">Delete</button>
+        ${r.subject} – ${r.subtopic}<br>
+        <a href="${r.url}" target="_blank">Open</a><br>
+        <button onclick="editLink('${doc.id}')">Edit</button>
+        <button onclick="deleteLink('${doc.id}')">Delete</button>
       `;
 
       adminList.appendChild(li);
@@ -64,61 +65,54 @@ function loadResources() {
 }
 
 /* =========================
-   SAVE (ADD / EDIT)
-   ========================= */
-saveBtn.addEventListener("click", () => {
+   SAVE / EDIT
+========================= */
+window.saveLink = function () {
   const data = {
-    title: title.value,
-    url: url.value,
-    subject: subject.value,
-    subtopic: subtopic.value,
-    type: type.value
+    title: titleInput.value,
+    url: urlInput.value,
+    subject: subjectInput.value,
+    subtopic: subtopicInput.value
   };
 
-  if (editId) {
-    db.collection("links").doc(editId).update(data);
+  const id = editIdInput.value;
+
+  if (id) {
+    db.collection("links").doc(id).update(data);
   } else {
     db.collection("links").add(data);
   }
 
-  resetForm();
-});
+  clearForm();
+};
 
-/* =========================
-   EDIT
-   ========================= */
-window.editResource = id => {
+window.editLink = function (id) {
   db.collection("links").doc(id).get().then(doc => {
     const r = doc.data();
-
-    title.value = r.title;
-    url.value = r.url;
-    subject.value = r.subject;
-    subtopic.value = r.subtopic;
-    type.value = r.type;
-
-    editId = id;
-    cancelBtn.style.display = "block";
+    titleInput.value = r.title;
+    urlInput.value = r.url;
+    subjectInput.value = r.subject;
+    subtopicInput.value = r.subtopic;
+    editIdInput.value = id;
   });
 };
 
-cancelBtn.addEventListener("click", resetForm);
-
-function resetForm() {
-  title.value = "";
-  url.value = "";
-  subject.value = "";
-  subtopic.value = "";
-  type.value = "video";
-  editId = null;
-  cancelBtn.style.display = "none";
-}
-
 /* =========================
    DELETE
-   ========================= */
-window.deleteResource = id => {
+========================= */
+window.deleteLink = function (id) {
   if (confirm("Delete this resource?")) {
     db.collection("links").doc(id).delete();
   }
+};
+
+/* =========================
+   CLEAR
+========================= */
+window.clearForm = function () {
+  titleInput.value = "";
+  urlInput.value = "";
+  subjectInput.value = "";
+  subtopicInput.value = "";
+  editIdInput.value = "";
 };
