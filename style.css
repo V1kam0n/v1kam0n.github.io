@@ -1,87 +1,209 @@
-:root {
-  --primary: #4f46e5;
-  --secondary: #22c55e;
-  --card: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-}
-
+/* =========================
+   RESET
+========================= */
 * {
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-  font-family: "Segoe UI", system-ui, sans-serif;
-  background: url("./assets/library-bg.jpg") center / cover fixed;
   margin: 0;
-  padding: 24px;
-  color: var(--text);
+  padding: 20px;
+  background: #f0f2f5;
+  color: #222;
 }
 
+/* =========================
+   HEADER
+========================= */
 .header {
-  background: rgba(255,255,255,0.9);
-  padding: 20px;
-  border-radius: 16px;
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
+.header h1 {
+  margin: 0;
+  font-size: 2.2em;
+}
+
+.subtitle {
+  color: #555;
+  margin-top: 6px;
+}
+
+/* =========================
+   LINKS
+========================= */
 .admin-link {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  font-size: 12px;
-  opacity: 0.4;
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #2b6cb0;
   text-decoration: none;
-  color: var(--text);
+  font-weight: bold;
 }
 
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+.admin-link:hover {
+  text-decoration: underline;
 }
 
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 14px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  background: var(--primary);
+/* PLATFORM LINK BUTTON */
+.platform-link {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 14px;
+  background: #2b6cb0;
   color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.platform-link:hover {
+  background: #234e82;
+}
+
+/* =========================
+   CARD LAYOUT
+========================= */
+.card {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   FORM ELEMENTS
+========================= */
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #2b6cb0;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+button {
+  padding: 10px 14px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+  background: #2b6cb0;
+  color: white;
+}
+
+button:hover {
+  background: #234e82;
 }
 
 button.secondary {
-  background: var(--secondary);
+  background: #6b7280;
 }
 
+button.secondary:hover {
+  background: #4b5563;
+}
+
+/* =========================
+   LISTS
+========================= */
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
-  background: #f9fafb;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
 }
 
-#adminList li button {
-  width: auto;
-  margin-right: 8px;
-  margin-top: 8px;
+li:last-child {
+  border-bottom: none;
+}
+
+li button {
+  margin-right: 6px;
+}
+
+/* =========================
+   RESOURCE LIST (INDEX)
+========================= */
+#list li a {
+  color: #2b6cb0;
+  text-decoration: none;
+}
+
+#list li a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   PLATFORM CARDS
+========================= */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.platform-card {
+  background: #f9f9f9;
+  padding: 16px;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.platform-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.platform-card img {
+  max-width: 80px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.platform-card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* =========================
+   ADMIN PANEL
+========================= */
+#adminPanel input,
+#adminPanel select {
+  margin-bottom: 8px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .header h1 {
+    font-size: 1.8em;
+  }
 }

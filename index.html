@@ -7,19 +7,20 @@
 </head>
 <body>
 
-<a href="admin.html" class="admin-link">Admin</a>
+<a href="admin.html" class="admin-link">admin</a>
 
 <div class="header">
   <h1>📘 WISELearn</h1>
   <p class="subtitle">Smart learning resources</p>
+
+  <!-- LINK TO PLATFORMS -->
+  <a href="platforms.html" class="platform-link">
+    🌐 Learning Platforms
+  </a>
 </div>
 
 <section class="card">
-  <input
-    id="searchInput"
-    placeholder="Search resources..."
-    autocomplete="off"
-  />
+  <input id="searchInput" placeholder="Search resources..." />
 
   <select id="subjectFilter">
     <option value="all">All Subjects</option>
@@ -36,9 +37,7 @@
     <option value="note">Note</option>
   </select>
 
-  <button id="refreshBtn" type="button" class="secondary">
-    🔄 Refresh
-  </button>
+  <button id="refreshBtn" type="button" class="secondary">🔄 Refresh</button>
 </section>
 
 <section class="card">
@@ -59,6 +58,6 @@
   const db = firebase.firestore();
 </script>
 
-<script src="script-user.js?v=final"></script>
+<script src="script-user.js?v=3"></script>
 </body>
 </html>
