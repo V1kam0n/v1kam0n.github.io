@@ -150,3 +150,71 @@ window.clearForm = function () {
   typeInput.value = "video";
   editIdInput.value = "";
 };
+const platformName = document.getElementById("platformName");
+const platformUrl = document.getElementById("platformUrl");
+const platformLogo = document.getElementById("platformLogo");
+const platformEditId = document.getElementById("platformEditId");
+const platformAdminList = document.getElementById("platformAdminList");
+
+db.collection("platforms").onSnapshot(snapshot => {
+  platformAdminList.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const p = doc.data();
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <strong>${p.name}</strong><br>
+      <button onclick="editPlatform('${doc.id}')">Edit</button>
+      <button onclick="deletePlatform('${doc.id}')">Delete</button>
+    `;
+
+    platformAdminList.appendChild(li);
+  });
+});
+
+window.savePlatform = function () {
+  const data = {
+    name: platformName.value.trim(),
+    url: platformUrl.value.trim(),
+    logo: platformLogo.value.trim()
+  };
+
+  if (!data.name || !data.url || !data.logo) {
+    alert("Fill all fields");
+    return;
+  }
+
+  const id = platformEditId.value;
+
+  if (id) {
+    db.collection("platforms").doc(id).update(data);
+  } else {
+    db.collection("platforms").add(data);
+  }
+
+  clearPlatform();
+};
+
+window.editPlatform = function (id) {
+  db.collection("platforms").doc(id).get().then(doc => {
+    const p = doc.data();
+    platformName.value = p.name;
+    platformUrl.value = p.url;
+    platformLogo.value = p.logo;
+    platformEditId.value = id;
+  });
+};
+
+window.deletePlatform = function (id) {
+  if (confirm("Delete platform?")) {
+    db.collection("platforms").doc(id).delete();
+  }
+};
+
+window.clearPlatform = function () {
+  platformName.value = "";
+  platformUrl.value = "";
+  platformLogo.value = "";
+  platformEditId.value = "";
+};
