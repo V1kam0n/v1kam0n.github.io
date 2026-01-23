@@ -9,7 +9,7 @@ const password = document.getElementById("password");
 const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
 const subjectInput = document.getElementById("subject");
-const subtopicInput = document.getElementById("subtopic");
+const topicInput = document.getElementById("topic");
 const typeInput = document.getElementById("type");
 const editIdInput = document.getElementById("editId");
 
@@ -61,7 +61,7 @@ function loadResources() {
 
       li.innerHTML = `
         <strong>${r.title}</strong><br>
-        ${r.subject} – ${r.subtopic} (${r.type})<br>
+        ${r.subject} → ${r.topic} (${r.type})<br>
         <button onclick="editLink('${doc.id}')">Edit</button>
         <button onclick="deleteLink('${doc.id}')">Delete</button>
       `;
@@ -76,12 +76,17 @@ function loadResources() {
 ========================= */
 window.saveLink = function () {
   const data = {
-    title: titleInput.value,
-    url: urlInput.value,
-    subject: subjectInput.value,
-    subtopic: subtopicInput.value,
+    title: titleInput.value.trim(),
+    url: urlInput.value.trim(),
+    subject: subjectInput.value.trim(),
+    topic: topicInput.value.trim(),
     type: typeInput.value
   };
+
+  if (!data.title || !data.url || !data.subject || !data.topic) {
+    alert("Please fill in all fields.");
+    return;
+  }
 
   const id = editIdInput.value;
 
@@ -94,13 +99,16 @@ window.saveLink = function () {
   clearForm();
 };
 
+/* =========================
+   EDIT
+========================= */
 window.editLink = function (id) {
   db.collection("links").doc(id).get().then(doc => {
     const r = doc.data();
     titleInput.value = r.title;
     urlInput.value = r.url;
     subjectInput.value = r.subject;
-    subtopicInput.value = r.subtopic;
+    topicInput.value = r.topic;
     typeInput.value = r.type;
     editIdInput.value = id;
   });
@@ -116,13 +124,32 @@ window.deleteLink = function (id) {
 };
 
 /* =========================
-   CLEAR
+   CLEAR FORM
 ========================= */
 window.clearForm = function () {
   titleInput.value = "";
   urlInput.value = "";
   subjectInput.value = "";
-  subtopicInput.value = "";
+  topicInput.value = "";
   typeInput.value = "video";
   editIdInput.value = "";
+};
+
+window.migrateSubtopicToTopic = function () {
+  if (!confirm("Run migration? This should be done ONCE.")) return;
+
+  db.collection("links").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      // Only migrate old data
+      if (!data.topic && data.subtopic) {
+        db.collection("links").doc(doc.id).update({
+          topic: data.subtopic
+        });
+      }
+    });
+
+    alert("Migration complete!");
+  });
 };

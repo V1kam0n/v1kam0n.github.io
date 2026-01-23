@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const list = document.getElementById("list");
   const searchInput = document.getElementById("searchInput");
   const subjectFilter = document.getElementById("subjectFilter");
-  const subtopicFilter = document.getElementById("subtopicFilter");
+  const topicFilter = document.getElementById("topicFilter");
   const typeFilter = document.getElementById("typeFilter");
   const refreshBtn = document.getElementById("refreshBtn");
 
@@ -14,35 +14,36 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================= */
   db.collection("links").onSnapshot(snapshot => {
     resources = [];
-    snapshot.forEach(doc => {
-      resources.push(doc.data());
-    });
+    snapshot.forEach(doc => resources.push(doc.data()));
 
-    populateFilters();
+    updateSubjects();
     renderList();
   });
 
   /* =========================
-     FILTER DROPDOWNS
+     SUBJECT → TOPIC
   ========================= */
-  function populateFilters() {
-    const subjects = new Set();
-    const subtopics = new Set();
-
-    resources.forEach(r => {
-      subjects.add(r.subject);
-      subtopics.add(r.subtopic);
-    });
-
+  function updateSubjects() {
     subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
-    subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
-
-    subjects.forEach(s => {
+    [...new Set(resources.map(r => r.subject))].forEach(s => {
       subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
     });
 
-    subtopics.forEach(t => {
-      subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
+    updateTopics();
+  }
+
+  function updateTopics() {
+    const subject = subjectFilter.value;
+
+    topicFilter.innerHTML = `<option value="all">All Topics</option>`;
+
+    let filtered = resources;
+    if (subject !== "all") {
+      filtered = resources.filter(r => r.subject === subject);
+    }
+
+    [...new Set(filtered.map(r => r.topic))].forEach(t => {
+      topicFilter.innerHTML += `<option value="${t}">${t}</option>`;
     });
   }
 
@@ -54,13 +55,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const search = searchInput.value.toLowerCase();
     const subject = subjectFilter.value;
-    const subtopic = subtopicFilter.value;
+    const topic = topicFilter.value;
     const type = typeFilter.value;
 
     resources
       .filter(r =>
         (subject === "all" || r.subject === subject) &&
-        (subtopic === "all" || r.subtopic === subtopic) &&
+        (topic === "all" || r.topic === topic) &&
         (type === "all" || r.type === type) &&
         r.title.toLowerCase().includes(search)
       )
@@ -73,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
         li.innerHTML = `
           <strong>${icon} ${r.title}</strong><br>
-          ${r.subject} – ${r.subtopic}<br>
+          ${r.subject} → ${r.topic}<br>
           <a href="${r.url}" target="_blank">Open</a>
         `;
         list.appendChild(li);
@@ -83,17 +84,23 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      EVENTS
   ========================= */
-  searchInput.addEventListener("input", renderList);
-  subjectFilter.addEventListener("change", renderList);
-  subtopicFilter.addEventListener("change", renderList);
-  typeFilter.addEventListener("change", renderList);
 
-  // 🔄 REFRESH BUTTON (GUARANTEED)
+  subjectFilter.addEventListener("change", () => {
+    topicFilter.value = "all";
+    updateTopics();
+    renderList();
+  });
+
+  topicFilter.addEventListener("change", renderList);
+  typeFilter.addEventListener("change", renderList);
+  searchInput.addEventListener("input", renderList);
+
   refreshBtn.addEventListener("click", () => {
     searchInput.value = "";
     subjectFilter.value = "all";
-    subtopicFilter.value = "all";
+    topicFilter.value = "all";
     typeFilter.value = "all";
+    updateTopics();
     renderList();
   });
 
