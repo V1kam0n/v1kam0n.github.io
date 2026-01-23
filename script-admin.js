@@ -3,7 +3,6 @@ console.log("Script Admin loaded!");
 // =========================
 // ELEMENTS
 // =========================
-// Auth
 const loginSection = document.getElementById("loginSection");
 const adminContent = document.getElementById("adminContent");
 const loginBtn = document.getElementById("loginBtn");
@@ -17,7 +16,7 @@ const resourceBody = document.getElementById("resourceBody");
 const platformHeader = document.getElementById("platformHeader");
 const platformBody = document.getElementById("platformBody");
 
-// Resource Inputs
+// Inputs
 const resourceSaveBtn = document.getElementById("resourceSaveBtn");
 const adminList = document.getElementById("adminList");
 const titleInput = document.getElementById("title");
@@ -26,7 +25,6 @@ const subjectInput = document.getElementById("subject");
 const topicInput = document.getElementById("topic");
 const typeInput = document.getElementById("type");
 
-// Platform Inputs
 const platformSaveBtn = document.getElementById("platformSaveBtn");
 const adminPlatformList = document.getElementById("adminPlatformList");
 const platNameInput = document.getElementById("platName");
@@ -34,37 +32,23 @@ const platUrlInput = document.getElementById("platUrl");
 const platImgInput = document.getElementById("platImg");
 
 // =========================
-// 1. TOGGLE LOGIC
-// =========================
-function toggleSection(header, body) {
-  header.addEventListener("click", () => {
-    // Toggle hidden class on the body
-    body.classList.toggle("hidden");
-    // Toggle visual arrow style on header
-    header.classList.toggle("collapsed");
-  });
-}
-
-// Activate toggles
-if(resourceHeader && resourceBody) toggleSection(resourceHeader, resourceBody);
-if(platformHeader && platformBody) toggleSection(platformHeader, platformBody);
-
-
-// =========================
-// 2. AUTHENTICATION
+// 1. AUTH LOGIC (The Fix)
 // =========================
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      // User is logged in
-      loginSection.classList.add("hidden");
-      adminContent.classList.remove("hidden");
+      console.log("Logged in:", user.email);
+      // HIDE Login, SHOW Admin
+      loginSection.classList.add("d-none");
+      adminContent.classList.remove("d-none");
+      
       loadResources();
       loadPlatforms();
     } else {
-      // User is logged out
-      loginSection.classList.remove("hidden");
-      adminContent.classList.add("hidden");
+      console.log("Logged out");
+      // SHOW Login, HIDE Admin
+      loginSection.classList.remove("d-none");
+      adminContent.classList.add("d-none");
     }
   });
 }
@@ -81,7 +65,21 @@ if (logoutBtn) {
 }
 
 // =========================
-// 3. RESOURCES MANAGER
+// 2. TOGGLES
+// =========================
+function toggleSection(header, body) {
+  header.addEventListener("click", () => {
+    body.classList.toggle("hidden"); // Toggles visibility
+    header.classList.toggle("collapsed"); // Rotates arrow
+  });
+}
+
+if(resourceHeader && resourceBody) toggleSection(resourceHeader, resourceBody);
+if(platformHeader && platformBody) toggleSection(platformHeader, platformBody);
+
+
+// =========================
+// 3. DATA FUNCTIONS
 // =========================
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
@@ -93,7 +91,6 @@ function loadResources() {
           <strong>${r.title}</strong> (${r.subject})
           <button class="secondary delete-btn" style="float:right; padding: 4px 8px; margin:0;">Delete</button>
       `;
-      // Attach delete event
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
       adminList.appendChild(li);
     });
@@ -102,11 +99,7 @@ function loadResources() {
 
 if (resourceSaveBtn) {
   resourceSaveBtn.addEventListener("click", () => {
-    if (!titleInput.value || !urlInput.value) {
-      alert("Please fill all resource fields");
-      return;
-    }
-
+    if (!titleInput.value || !urlInput.value) return alert("Fill all fields");
     db.collection("links").add({
       title: titleInput.value,
       url: urlInput.value,
@@ -116,13 +109,10 @@ if (resourceSaveBtn) {
     }).then(() => {
        titleInput.value = ""; urlInput.value = ""; 
        subjectInput.value = ""; topicInput.value = "";
-    }).catch(err => alert("Error: " + err.message));
+    });
   });
 }
 
-// =========================
-// 4. PLATFORMS MANAGER (With Image)
-// =========================
 function loadPlatforms() {
   db.collection("platforms").onSnapshot(snapshot => {
     adminPlatformList.innerHTML = "";
@@ -141,29 +131,19 @@ function loadPlatforms() {
 
 if (platformSaveBtn) {
   platformSaveBtn.addEventListener("click", () => {
-    if (!platNameInput.value || !platUrlInput.value) {
-      alert("Please fill Name and URL");
-      return;
-    }
-    
-    // Save with Image URL (or default if empty)
+    if (!platNameInput.value || !platUrlInput.value) return alert("Fill Name and URL");
     db.collection("platforms").add({
       name: platNameInput.value,
       url: platUrlInput.value,
       image: platImgInput.value || "https://placehold.co/600x400?text=No+Image"
     }).then(() => {
-      platNameInput.value = "";
-      platUrlInput.value = "";
-      platImgInput.value = "";
-    }).catch(err => alert("Error: " + err.message));
+      platNameInput.value = ""; platUrlInput.value = ""; platImgInput.value = "";
+    });
   });
 }
 
-// =========================
-// UTILS
-// =========================
 function deleteDoc(collection, id) {
-  if (confirm("Are you sure you want to delete this?")) {
+  if (confirm("Delete this?")) {
     db.collection(collection).doc(id).delete();
   }
 }

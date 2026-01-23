@@ -19,7 +19,7 @@
   <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
 </section>
 
-<div id="adminContent" class="hidden">
+<div id="adminContent" class="d-none">
   
   <section class="card" style="text-align: center; padding: 10px;">
     <p>Logged in as Admin</p>
@@ -28,13 +28,12 @@
   </section>
 
   <section class="card" style="padding: 0;">
-    
     <div class="toggle-header" id="resourceHeader">
       <h2>📚 Manage Resources</h2>
       <span class="toggle-icon">▼</span>
     </div>
 
-    <div class="content-body" id="resourceBody">
+    <div class="content-body hidden" id="resourceBody">
       <input id="title" placeholder="Title (e.g., Intro to Math)">
       <input id="url" placeholder="Resource URL">
       <input id="subject" placeholder="Subject (e.g., Math)">
@@ -52,16 +51,15 @@
   </section>
 
   <section class="card" style="padding: 0;">
-    
     <div class="toggle-header" id="platformHeader">
       <h2>🌐 Manage Platforms</h2>
       <span class="toggle-icon">▼</span>
     </div>
 
-    <div class="content-body" id="platformBody">
+    <div class="content-body hidden" id="platformBody">
       <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
       <input id="platUrl" placeholder="Link URL">
-      <input id="platImg" placeholder="Image URL (Right-click image > Copy Image Address)">
+      <input id="platImg" placeholder="Image URL (Right-click image > Copy Address)">
       <button id="platformSaveBtn">Save Platform</button>
 
       <h3>Existing Platforms</h3>
@@ -76,7 +74,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 
 <script>
-  // Initialize Firebase
   firebase.initializeApp({
     apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
     authDomain: "wiselearn-7f2ec.firebaseapp.com",
