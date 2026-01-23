@@ -1,4 +1,4 @@
-console.log("Script Admin loaded!");
+console.log("Script Admin loaded! v2.0 (With Edit Buttons)");
 
 // =========================
 // ELEMENTS
@@ -34,12 +34,12 @@ const platNameInput = document.getElementById("platName");
 const platUrlInput = document.getElementById("platUrl");
 const platImgInput = document.getElementById("platImg");
 
-// STATE VARIABLES (To track what we are editing)
+// State Variables
 let editingResourceId = null;
 let editingPlatformId = null;
 
 // =========================
-// 1. AUTH & TOGGLES
+// 1. AUTHENTICATION & TOGGLES
 // =========================
 if (auth) {
   auth.onAuthStateChanged(user => {
@@ -62,6 +62,7 @@ if(loginBtn) loginBtn.addEventListener("click", () => {
 
 if(logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
 
+// Toggle Sections
 function toggleSection(header, body) {
   header.addEventListener("click", () => {
     body.classList.toggle("hidden");
@@ -73,7 +74,7 @@ if(platformHeader) toggleSection(platformHeader, platformBody);
 
 
 // =========================
-// 2. RESOURCE MANAGER (Edit & Save)
+// 2. RESOURCE MANAGER
 // =========================
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
@@ -81,6 +82,8 @@ function loadResources() {
     snapshot.forEach(doc => {
       const r = doc.data();
       const li = document.createElement("li");
+      
+      // THIS IS THE PART THAT ADDS THE BUTTONS
       li.innerHTML = `
           <strong>${r.title}</strong> (${r.subject})
           <div style="float:right;">
@@ -88,40 +91,34 @@ function loadResources() {
              <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
           </div>
       `;
-      // Attach events
+      
+      // Attach Events
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
       li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
+      
       adminList.appendChild(li);
     });
   });
 }
 
-// Function to Start Editing
 function startEditResource(doc) {
   const data = doc.data();
-  // Fill inputs
   titleInput.value = data.title;
   urlInput.value = data.url;
   subjectInput.value = data.subject;
   topicInput.value = data.topic;
   typeInput.value = data.type;
 
-  // Set State
   editingResourceId = doc.id;
-  resourceSaveBtn.innerText = "Update Resource"; // Change button text
-  resourceCancelBtn.classList.remove("d-none");  // Show cancel button
-  
-  // Scroll to top of form
+  resourceSaveBtn.innerText = "Update Resource";
+  resourceCancelBtn.classList.remove("d-none");
+  resourceBody.classList.remove("hidden"); // Ensure it's open
   resourceBody.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Cancel Editing
-resourceCancelBtn.addEventListener("click", () => {
-  resetResourceForm();
-});
+if(resourceCancelBtn) resourceCancelBtn.addEventListener("click", resetResourceForm);
 
-// Save or Update
-resourceSaveBtn.addEventListener("click", () => {
+if(resourceSaveBtn) resourceSaveBtn.addEventListener("click", () => {
   if (!titleInput.value || !urlInput.value) return alert("Fill all fields");
 
   const data = {
@@ -133,13 +130,9 @@ resourceSaveBtn.addEventListener("click", () => {
   };
 
   if (editingResourceId) {
-    // UPDATE existing
-    db.collection("links").doc(editingResourceId).update(data)
-      .then(() => resetResourceForm());
+    db.collection("links").doc(editingResourceId).update(data).then(resetResourceForm);
   } else {
-    // ADD new
-    db.collection("links").add(data)
-      .then(() => resetResourceForm());
+    db.collection("links").add(data).then(resetResourceForm);
   }
 });
 
@@ -151,9 +144,8 @@ function resetResourceForm() {
   resourceCancelBtn.classList.add("d-none");
 }
 
-
 // =========================
-// 3. PLATFORM MANAGER (Edit & Save)
+// 3. PLATFORM MANAGER
 // =========================
 function loadPlatforms() {
   db.collection("platforms").onSnapshot(snapshot => {
@@ -161,6 +153,8 @@ function loadPlatforms() {
     snapshot.forEach(doc => {
       const p = doc.data();
       const li = document.createElement("li");
+      
+      // THIS ADDS THE BUTTONS FOR PLATFORMS
       li.innerHTML = `
           <strong>${p.name}</strong>
           <div style="float:right;">
@@ -168,8 +162,10 @@ function loadPlatforms() {
              <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
           </div>
       `;
+      
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('platforms', doc.id));
       li.querySelector(".edit-btn").addEventListener("click", () => startEditPlatform(doc));
+      
       adminPlatformList.appendChild(li);
     });
   });
@@ -184,14 +180,13 @@ function startEditPlatform(doc) {
   editingPlatformId = doc.id;
   platformSaveBtn.innerText = "Update Platform";
   platformCancelBtn.classList.remove("d-none");
+  platformBody.classList.remove("hidden"); // Ensure it's open
   platformBody.scrollIntoView({ behavior: 'smooth' });
 }
 
-platformCancelBtn.addEventListener("click", () => {
-  resetPlatformForm();
-});
+if(platformCancelBtn) platformCancelBtn.addEventListener("click", resetPlatformForm);
 
-platformSaveBtn.addEventListener("click", () => {
+if(platformSaveBtn) platformSaveBtn.addEventListener("click", () => {
   if (!platNameInput.value || !platUrlInput.value) return alert("Fill Name and URL");
 
   const data = {
@@ -201,11 +196,9 @@ platformSaveBtn.addEventListener("click", () => {
   };
 
   if (editingPlatformId) {
-    db.collection("platforms").doc(editingPlatformId).update(data)
-      .then(() => resetPlatformForm());
+    db.collection("platforms").doc(editingPlatformId).update(data).then(resetPlatformForm);
   } else {
-    db.collection("platforms").add(data)
-      .then(() => resetPlatformForm());
+    db.collection("platforms").add(data).then(resetPlatformForm);
   }
 });
 
