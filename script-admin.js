@@ -1,3 +1,6 @@
+// =========================
+// ELEMENTS
+// =========================
 const loginCard = document.getElementById("loginCard");
 const adminPanel = document.getElementById("adminPanel");
 const resourceList = document.getElementById("resourceList");
@@ -13,9 +16,11 @@ const topicInput = document.getElementById("topic");
 const typeInput = document.getElementById("type");
 const editIdInput = document.getElementById("editId");
 
-/* =========================
-   AUTH STATE
-========================= */
+let unsubscribe = null;
+
+// =========================
+// AUTH STATE
+// =========================
 auth.onAuthStateChanged(user => {
   if (user) {
     loginCard.style.display = "none";
@@ -26,14 +31,16 @@ auth.onAuthStateChanged(user => {
     loginCard.style.display = "block";
     adminPanel.style.display = "none";
     resourceList.style.display = "none";
+    if (unsubscribe) unsubscribe();
   }
 });
 
-/* =========================
-   LOGIN / LOGOUT
-========================= */
+// =========================
+// LOGIN / LOGOUT
+// =========================
 window.login = function () {
-  auth.signInWithEmailAndPassword(email.value, password.value)
+  auth
+    .signInWithEmailAndPassword(email.value, password.value)
     .catch(err => alert(err.message));
 };
 
@@ -41,18 +48,20 @@ window.logout = function () {
   auth.signOut();
 };
 
-/* =========================
-   BACK TO HOME
-========================= */
+// =========================
+// BACK TO HOME
+// =========================
 window.goHome = function () {
   window.location.replace("index.html");
 };
 
-/* =========================
-   LOAD RESOURCES
-========================= */
+// =========================
+// LOAD RESOURCES
+// =========================
 function loadResources() {
-  db.collection("links").onSnapshot(snapshot => {
+  if (unsubscribe) unsubscribe();
+
+  unsubscribe = db.collection("links").onSnapshot(snapshot => {
     adminList.innerHTML = "";
 
     snapshot.forEach(doc => {
@@ -71,9 +80,9 @@ function loadResources() {
   });
 }
 
-/* =========================
-   SAVE / EDIT
-========================= */
+// =========================
+// SAVE / EDIT
+// =========================
 window.saveLink = function () {
   const data = {
     title: titleInput.value.trim(),
@@ -88,6 +97,11 @@ window.saveLink = function () {
     return;
   }
 
+  if (!data.url.startsWith("http")) {
+    alert("URL must start with http or https");
+    return;
+  }
+
   const id = editIdInput.value;
 
   if (id) {
@@ -99,9 +113,9 @@ window.saveLink = function () {
   clearForm();
 };
 
-/* =========================
-   EDIT
-========================= */
+// =========================
+// EDIT
+// =========================
 window.editLink = function (id) {
   db.collection("links").doc(id).get().then(doc => {
     const r = doc.data();
@@ -111,21 +125,23 @@ window.editLink = function (id) {
     topicInput.value = r.topic;
     typeInput.value = r.type;
     editIdInput.value = id;
+
+    adminPanel.scrollIntoView({ behavior: "smooth" });
   });
 };
 
-/* =========================
-   DELETE
-========================= */
+// =========================
+// DELETE
+// =========================
 window.deleteLink = function (id) {
   if (confirm("Delete this resource?")) {
     db.collection("links").doc(id).delete();
   }
 };
 
-/* =========================
-   CLEAR FORM
-========================= */
+// =========================
+// CLEAR FORM
+// =========================
 window.clearForm = function () {
   titleInput.value = "";
   urlInput.value = "";
@@ -134,4 +150,3 @@ window.clearForm = function () {
   typeInput.value = "video";
   editIdInput.value = "";
 };
-
