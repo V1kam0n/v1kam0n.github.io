@@ -14,17 +14,17 @@
   <h2>Admin Login</h2>
   <input id="adminEmail" type="email" placeholder="Email Address">
   <input id="adminPassword" type="password" placeholder="Password">
-  <button id="loginBtn">Login</button>
+  <button id="loginBtn" style="width:100%">Login</button>
   <br><br>
-  <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
+  <a href="index.html"><button class="secondary" style="width:100%">⬅ Back to Home</button></a>
 </section>
 
 <div id="adminContent" class="d-none">
   
   <section class="card" style="text-align: center; padding: 10px;">
     <p>Logged in as Admin</p>
-    <button id="logoutBtn" class="secondary" style="margin:0;">Sign Out</button>
-    <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
+    <button id="logoutBtn" class="secondary" style="width:100%; margin:0;">Sign Out</button>
+    <a href="index.html"><button class="secondary" style="width:100%; margin-top:5px;">⬅ Back to Home</button></a>
   </section>
 
   <section class="card" style="padding: 0;">
@@ -44,7 +44,7 @@
         <option value="note">Note</option>
       </select>
       
-      <button id="resourceSaveBtn">Save Resource</button>
+      <button id="resourceSaveBtn" style="width:100%">Save Resource</button>
       <button id="resourceCancelBtn" class="cancel-btn d-none">Cancel Edit</button>
 
       <h3>Existing Resources</h3>
@@ -63,7 +63,7 @@
       <input id="platUrl" placeholder="Link URL">
       <input id="platImg" placeholder="Image URL">
       
-      <button id="platformSaveBtn">Save Platform</button>
+      <button id="platformSaveBtn" style="width:100%">Save Platform</button>
       <button id="platformCancelBtn" class="cancel-btn d-none">Cancel Edit</button>
 
       <h3>Existing Platforms</h3>
@@ -87,6 +87,6 @@
   const auth = firebase.auth();
 </script>
 
-<script src="script-admin.js?v=3"></script>
+<script src="script-admin.js?v=4"></script>
 </body>
 </html>

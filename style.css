@@ -44,8 +44,8 @@ h1 {
   color: inherit;
 }
 
-/* 🔘 INPUTS & BUTTONS */
-input, select, button {
+/* 🔘 INPUTS */
+input, select {
   width: 100%;
   margin: 6px 0;
   padding: 10px;
@@ -54,13 +54,18 @@ input, select, button {
   font-size: 16px;
 }
 
+/* 🔘 BUTTONS (General) */
 button {
-  background: #92400e;
-  color: white;
+  width: auto; /* Allow buttons to fit text */
+  padding: 8px 16px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;
   transition: background 0.2s;
+  background: #92400e;
+  color: white;
 }
 
 button:hover {
@@ -76,7 +81,7 @@ button.secondary:hover {
   background: #d4d4d4;
 }
 
-/* 📄 LISTS */
+/* 📄 LISTS (Flexbox Layout - The Fix) */
 ul {
   list-style: none;
   padding: 0;
@@ -84,8 +89,13 @@ ul {
 }
 
 li {
+  /* Aligns text left, buttons right */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px;
   border-bottom: 1px solid #eee;
+  gap: 15px;
 }
 
 li:last-child {
@@ -98,8 +108,15 @@ li a {
   font-weight: 500;
 }
 
-li a:hover {
-  text-decoration: underline;
+/* Helper to group text vs buttons */
+.text-content {
+  flex: 1;
+  text-align: left;
+}
+
+.btn-group {
+  display: flex;
+  gap: 8px; /* Space between Edit and Delete */
 }
 
 /* 🔗 ADMIN LINK */
@@ -179,21 +196,19 @@ li a:hover {
   display: block;
 }
 
-/* 🔧 UTILITIES (Fixed) */
+/* 🔧 UTILITIES */
 .hidden {
   display: none !important;
 }
 
-/* THIS WAS MISSING - IT FIXES THE DOUBLE SCREEN BUG */
 .d-none {
   display: none !important;
 }
 
 /* ✏️ EDIT BUTTONS */
 button.edit-btn {
-  background: #0284c7;
+  background: #0284c7; /* Blue */
   color: white;
-  margin-right: 5px;
 }
 button.edit-btn:hover {
   background: #0369a1;
@@ -203,4 +218,5 @@ button.cancel-btn {
   background: #64748b;
   color: white;
   margin-top: 5px;
+  width: 100%; /* Cancel button stays full width */
 }

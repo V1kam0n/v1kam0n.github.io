@@ -1,4 +1,4 @@
-console.log("Script Admin loaded! v2.0 (With Edit Buttons)");
+console.log("Script Admin loaded! v4.0 (Flexbox Fixed)");
 
 // =========================
 // ELEMENTS
@@ -44,11 +44,13 @@ let editingPlatformId = null;
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
+      // Hide Login, Show Admin
       loginSection.classList.add("d-none");
       adminContent.classList.remove("d-none");
       loadResources();
       loadPlatforms();
     } else {
+      // Show Login, Hide Admin
       loginSection.classList.remove("d-none");
       adminContent.classList.add("d-none");
     }
@@ -62,6 +64,7 @@ if(loginBtn) loginBtn.addEventListener("click", () => {
 
 if(logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
 
+// Toggle Sections
 function toggleSection(header, body) {
   header.addEventListener("click", () => {
     body.classList.toggle("hidden");
@@ -73,7 +76,7 @@ if(platformHeader) toggleSection(platformHeader, platformBody);
 
 
 // =========================
-// 2. RESOURCE MANAGER
+// 2. RESOURCE MANAGER (Layout Update)
 // =========================
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
@@ -82,14 +85,20 @@ function loadResources() {
       const r = doc.data();
       const li = document.createElement("li");
       
+      // NEW STRUCTURE: Text on Left, Buttons on Right
       li.innerHTML = `
-          <strong>${r.title}</strong> (${r.subject})
-          <div style="float:right;">
-             <button class="edit-btn" style="padding: 4px 8px; margin:0;">Edit</button>
-             <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
+          <span class="text-content">
+            <strong>${r.title}</strong> <br>
+            <small>${r.subject} &rarr; ${r.topic} (${r.type})</small>
+          </span>
+          
+          <div class="btn-group">
+             <button class="edit-btn">Edit</button>
+             <button class="secondary delete-btn">Delete</button>
           </div>
       `;
       
+      // Attach Events
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
       li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
       
@@ -142,7 +151,7 @@ function resetResourceForm() {
 }
 
 // =========================
-// 3. PLATFORM MANAGER
+// 3. PLATFORM MANAGER (Layout Update)
 // =========================
 function loadPlatforms() {
   db.collection("platforms").onSnapshot(snapshot => {
@@ -152,10 +161,12 @@ function loadPlatforms() {
       const li = document.createElement("li");
       
       li.innerHTML = `
-          <strong>${p.name}</strong>
-          <div style="float:right;">
-             <button class="edit-btn" style="padding: 4px 8px; margin:0;">Edit</button>
-             <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
+          <span class="text-content">
+            <strong>${p.name}</strong>
+          </span>
+          <div class="btn-group">
+             <button class="edit-btn">Edit</button>
+             <button class="secondary delete-btn">Delete</button>
           </div>
       `;
       
