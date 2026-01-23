@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>WISELearn Admin</title>
-
   <link rel="stylesheet" href="style.css">
-
-  <!-- Firebase (compat version – IMPORTANT) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
-
 <body>
 
-  <a href="index.html" class="admin-link">← Back</a>
+<section id="adminPanel">
 
-  <section id="adminPanel">
+  <a href="index.html" class="admin-back">← Back to WISELearn</a>
 
-    <div class="card">
-      <h2>All Resources</h2>
-      <ul id="adminList"></ul>
-    </div>
+  <div class="card">
+    <h2>Add / Edit Resource</h2>
 
-  </section>
+    <input id="title" placeholder="Title">
+    <input id="url" placeholder="URL">
 
-  <!-- Firebase config -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
-      authDomain: "wiselearn-7f2ec.firebaseapp.com",
-      projectId: "wiselearn-7f2ec",
-      storageBucket: "wiselearn-7f2ec.appspot.com",
-      messagingSenderId: "578141634188",
-      appId: "1:578141634188:web:21835bd85d88f8dd4645a9"
-    };
+    <input id="subject" placeholder="Subject">
+    <input id="subtopic" placeholder="Subtopic">
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
+    <select id="type">
+      <option value="video">🎥 Video</option>
+      <option value="notes">📄 Notes</option>
+      <option value="quiz">📝 Quiz</option>
+    </select>
 
-  <!-- Admin logic -->
-  <script src="script-admin.js"></script>
+    <button id="saveBtn">Save</button>
+    <button id="cancelBtn" style="display:none">Cancel</button>
+  </div>
 
+  <div class="card">
+    <h2>All Resources</h2>
+    <ul id="adminList"></ul>
+  </div>
+
+</section>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
+    authDomain: "wiselearn-7f2ec.firebaseapp.com",
+    projectId: "wiselearn-7f2ec",
+    storageBucket: "wiselearn-7f2ec.appspot.com",
+    messagingSenderId: "578141634188",
+    appId: "1:578141634188:web:21835bd85d88f8dd4645a9"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
+<script src="script-admin.js"></script>
 </body>
 </html>
