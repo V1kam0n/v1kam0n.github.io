@@ -1,54 +1,100 @@
 let resources = [];
 
+/* =========================
+   LOAD DATA
+   ========================= */
 db.collection("links").onSnapshot(snapshot => {
   resources = [];
   snapshot.forEach(doc => resources.push(doc.data()));
   updateFilters();
-  display(resources);
+  applyFilters();
 });
 
+/* =========================
+   DISPLAY
+   ========================= */
 function display(data) {
   list.innerHTML = "";
+
   data.forEach(r => {
     const li = document.createElement("li");
+
+    const iconMap = {
+      video: "🎥",
+      notes: "📝",
+      quiz: "🧠"
+    };
+
     const a = document.createElement("a");
     a.href = r.url;
     a.target = "_blank";
-    a.textContent = `${r.title} (${r.subject} - ${r.subtopic})`;
+    a.textContent = `${iconMap[r.type] || "📘"} ${r.title} (${r.subject} – ${r.subtopic})`;
+
     li.appendChild(a);
     list.appendChild(li);
   });
 }
 
-function filterLinks() {
-  const s = subjectFilter.value;
-  const t = subtopicFilter.value;
-  const q = searchInput.value.toLowerCase();
+/* =========================
+   FILTERS
+   ========================= */
+function applyFilters() {
+  const subject = subjectFilter.value;
+  const topic = subtopicFilter.value;
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
 
-  display(
-    resources.filter(r =>
-      (s === "all" || r.subject === s) &&
-      (t === "all" || r.subtopic === t) &&
-      (r.title.toLowerCase().includes(q) ||
-       r.subject.toLowerCase().includes(q) ||
-       r.subtopic.toLowerCase().includes(q))
+  const filtered = resources.filter(r =>
+    (subject === "all" || r.subject === subject) &&
+    (topic === "all" || r.subtopic === topic) &&
+    (
+      r.title.toLowerCase().includes(search) ||
+      r.subject.toLowerCase().includes(search) ||
+      r.subtopic.toLowerCase().includes(search)
     )
   );
+
+  display(filtered);
 }
 
+/* =========================
+   DROPDOWN UPDATES
+   ========================= */
 function updateFilters() {
+  // Subjects
   subjectFilter.innerHTML = `<option value="all">All Subjects</option>`;
+  [...new Set(resources.map(r => r.subject))].forEach(s => {
+    subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
+  });
+
+  updateSubtopics();
+}
+
+function updateSubtopics() {
+  const selectedSubject = subjectFilter.value;
   subtopicFilter.innerHTML = `<option value="all">All Topics</option>`;
 
-  [...new Set(resources.map(r => r.subject))]
-    .forEach(s => subjectFilter.innerHTML += `<option>${s}</option>`);
+  let filtered = resources;
 
-  [...new Set(resources.map(r => r.subtopic))]
-    .forEach(t => subtopicFilter.innerHTML += `<option>${t}</option>`);
+  if (selectedSubject !== "all") {
+    filtered = resources.filter(r => r.subject === selectedSubject);
+  }
+
+  [...new Set(filtered.map(r => r.subtopic))].forEach(t => {
+    subtopicFilter.innerHTML += `<option value="${t}">${t}</option>`;
+  });
 }
 
-const icon = {
-  video: "🎥",
-  notes: "📝",
-  quiz: "🧠"
-}[r.type];
+/* =========================
+   EVENTS
+   ========================= */
+subjectFilter.addEventListener("change", () => {
+  updateSubtopics();
+  subtopicFilter.value = "all"; // reset topic
+  applyFilters();
+});
+
+subtopicFilter.addEventListener("change", applyFilters);
+
+if (typeof searchInput !== "undefined") {
+  searchInput.addEventListener("input", applyFilters);
+}
