@@ -44,13 +44,11 @@ let editingPlatformId = null;
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      // Hide Login, Show Admin
       loginSection.classList.add("d-none");
       adminContent.classList.remove("d-none");
       loadResources();
       loadPlatforms();
     } else {
-      // Show Login, Hide Admin
       loginSection.classList.remove("d-none");
       adminContent.classList.add("d-none");
     }
@@ -64,7 +62,6 @@ if(loginBtn) loginBtn.addEventListener("click", () => {
 
 if(logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
 
-// Toggle Sections
 function toggleSection(header, body) {
   header.addEventListener("click", () => {
     body.classList.toggle("hidden");
@@ -85,7 +82,6 @@ function loadResources() {
       const r = doc.data();
       const li = document.createElement("li");
       
-      // THIS IS THE PART THAT ADDS THE BUTTONS
       li.innerHTML = `
           <strong>${r.title}</strong> (${r.subject})
           <div style="float:right;">
@@ -94,7 +90,6 @@ function loadResources() {
           </div>
       `;
       
-      // Attach Events
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
       li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
       
@@ -114,7 +109,7 @@ function startEditResource(doc) {
   editingResourceId = doc.id;
   resourceSaveBtn.innerText = "Update Resource";
   resourceCancelBtn.classList.remove("d-none");
-  resourceBody.classList.remove("hidden"); // Ensure it's open
+  resourceBody.classList.remove("hidden"); 
   resourceBody.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -156,7 +151,6 @@ function loadPlatforms() {
       const p = doc.data();
       const li = document.createElement("li");
       
-      // THIS ADDS THE BUTTONS FOR PLATFORMS
       li.innerHTML = `
           <strong>${p.name}</strong>
           <div style="float:right;">
@@ -182,7 +176,7 @@ function startEditPlatform(doc) {
   editingPlatformId = doc.id;
   platformSaveBtn.innerText = "Update Platform";
   platformCancelBtn.classList.remove("d-none");
-  platformBody.classList.remove("hidden"); // Ensure it's open
+  platformBody.classList.remove("hidden"); 
   platformBody.scrollIntoView({ behavior: 'smooth' });
 }
 

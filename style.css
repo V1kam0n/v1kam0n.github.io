@@ -7,7 +7,6 @@
 body {
   margin: 0;
   min-height: 100vh;
-  /* Reduced white overlay to 0.4 so the image is visible */
   background: 
     linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
     url("assets/library-bg.jpg") no-repeat center center fixed;
@@ -103,7 +102,7 @@ li a:hover {
   text-decoration: underline;
 }
 
-/* 🔗 ADMIN LINK (Floating) */
+/* 🔗 ADMIN LINK */
 .admin-link {
   position: fixed;
   top: 10px;
@@ -171,30 +170,28 @@ li a:hover {
   transition: transform 0.3s;
 }
 
-/* Icon rotates when collapsed */
 .collapsed .toggle-icon {
   transform: rotate(-90deg);
 }
 
-/* Content Body */
 .content-body {
   padding: 16px;
   display: block;
 }
 
-/* Utilities */
+/* 🔧 UTILITIES (Fixed) */
 .hidden {
   display: none !important;
 }
 
-/* 🔧 FORCE HIDE (Critical for Login logic) */
+/* THIS WAS MISSING - IT FIXES THE DOUBLE SCREEN BUG */
 .d-none {
   display: none !important;
 }
 
-/* ✏️ EDIT BUTTON */
+/* ✏️ EDIT BUTTONS */
 button.edit-btn {
-  background: #0284c7; /* Blue */
+  background: #0284c7;
   color: white;
   margin-right: 5px;
 }
@@ -202,7 +199,6 @@ button.edit-btn:hover {
   background: #0369a1;
 }
 
-/* Cancel Edit Button (Gray) */
 button.cancel-btn {
   background: #64748b;
   color: white;
