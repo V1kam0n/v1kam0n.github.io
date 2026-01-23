@@ -44,11 +44,13 @@ let editingPlatformId = null;
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
+      // Hide Login, Show Admin
       loginSection.classList.add("d-none");
       adminContent.classList.remove("d-none");
       loadResources();
       loadPlatforms();
     } else {
+      // Show Login, Hide Admin
       loginSection.classList.remove("d-none");
       adminContent.classList.add("d-none");
     }

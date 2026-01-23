@@ -187,7 +187,10 @@ li a:hover {
   display: none !important;
 }
 
-/* ... (keep existing CSS) ... */
+/* 🔧 FORCE HIDE (Critical for Login logic) */
+.d-none {
+  display: none !important;
+}
 
 /* ✏️ EDIT BUTTON */
 button.edit-btn {
