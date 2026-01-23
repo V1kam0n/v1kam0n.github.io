@@ -7,13 +7,13 @@
 body {
   margin: 0;
   min-height: 100vh;
+  /* Reduced white overlay from 0.88 to 0.4 so the image shows through */
   background: 
-    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
+    linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
     url("assets/library-bg.jpg") no-repeat center center fixed;
   background-size: cover;
   color: #3a2e1f;
 }
-
 /* 🏷️ HEADERS */
 .header {
   text-align: center;

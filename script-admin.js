@@ -1,29 +1,70 @@
-const adminList = document.getElementById("adminList");
+// =========================
+// ELEMENTS
+// =========================
+const loginSection = document.getElementById("loginSection");
+const adminContent = document.getElementById("adminContent");
 
+// Resource Inputs
+const adminList = document.getElementById("adminList");
 const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
 const subjectInput = document.getElementById("subject");
 const topicInput = document.getElementById("topic");
 const typeInput = document.getElementById("type");
 
-db.collection("links").onSnapshot(snapshot => {
-  adminList.innerHTML = "";
-  snapshot.forEach(doc => {
-    const r = doc.data();
-    adminList.innerHTML += `
-      <li>
-        <strong>${r.title}</strong><br>
-        ${r.subject} → ${r.topic} (${r.type})
-        <br>
-        <button onclick="db.collection('links').doc('${doc.id}').delete()">Delete</button>
-      </li>
-    `;
-  });
+// Platform Inputs
+const adminPlatformList = document.getElementById("adminPlatformList");
+const platNameInput = document.getElementById("platName");
+const platUrlInput = document.getElementById("platUrl");
+
+// =========================
+// 1. AUTHENTICATION
+// =========================
+// Listen for login state changes
+auth.onAuthStateChanged(user => {
+  if (user) {
+    // User is logged in
+    loginSection.classList.add("hidden");
+    adminContent.classList.remove("hidden");
+    loadResources();
+    loadPlatforms();
+  } else {
+    // User is logged out
+    loginSection.classList.remove("hidden");
+    adminContent.classList.add("hidden");
+  }
 });
+
+function loginWithGoogle() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider).catch(error => alert(error.message));
+}
+
+function logout() {
+  auth.signOut();
+}
+
+// =========================
+// 2. RESOURCE MANAGER
+// =========================
+function loadResources() {
+  db.collection("links").onSnapshot(snapshot => {
+    adminList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const r = doc.data();
+      adminList.innerHTML += `
+        <li>
+          <strong>${r.title}</strong> (${r.subject})
+          <button class="secondary" style="float:right; padding: 4px 8px; margin:0;" onclick="deleteDoc('links', '${doc.id}')">Delete</button>
+        </li>
+      `;
+    });
+  });
+}
 
 function saveLink() {
   if (!titleInput.value || !urlInput.value) {
-    alert("Fill all fields");
+    alert("Please fill all resource fields");
     return;
   }
 
@@ -33,10 +74,54 @@ function saveLink() {
     subject: subjectInput.value,
     topic: topicInput.value,
     type: typeInput.value
-  });
+  }).then(() => {
+    // Clear inputs
+    titleInput.value = "";
+    urlInput.value = "";
+    subjectInput.value = "";
+    topicInput.value = "";
+  }).catch(err => alert("Error: " + err.message));
+}
 
-  titleInput.value = "";
-  urlInput.value = "";
-  subjectInput.value = "";
-  topicInput.value = "";
+// =========================
+// 3. PLATFORM MANAGER
+// =========================
+function loadPlatforms() {
+  db.collection("platforms").onSnapshot(snapshot => {
+    adminPlatformList.innerHTML = "";
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      adminPlatformList.innerHTML += `
+        <li>
+          <strong>${p.name}</strong>
+          <button class="secondary" style="float:right; padding: 4px 8px; margin:0;" onclick="deleteDoc('platforms', '${doc.id}')">Delete</button>
+        </li>
+      `;
+    });
+  });
+}
+
+function savePlatform() {
+  if (!platNameInput.value || !platUrlInput.value) {
+    alert("Please fill all platform fields");
+    return;
+  }
+
+  db.collection("platforms").add({
+    name: platNameInput.value,
+    url: platUrlInput.value
+  }).then(() => {
+    // Clear inputs
+    platNameInput.value = "";
+    platUrlInput.value = "";
+  }).catch(err => alert("Error: " + err.message));
+}
+
+// =========================
+// UTILS
+// =========================
+function deleteDoc(collection, id) {
+  if (confirm("Are you sure you want to delete this?")) {
+    db.collection(collection).doc(id).delete();
+  }
 }

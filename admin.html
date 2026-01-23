@@ -3,6 +3,10 @@
 <head>
   <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Simple utility to hide elements */
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
 
@@ -10,28 +14,52 @@
   <h1>🔐 Admin Panel</h1>
 </header>
 
-<section class="card">
-  <input id="title" placeholder="Title">
-  <input id="url" placeholder="Resource URL">
-  <input id="subject" placeholder="Subject">
-  <input id="topic" placeholder="Topic">
-
-  <select id="type">
-    <option value="video">Video</option>
-    <option value="quiz">Quiz</option>
-    <option value="note">Note</option>
-  </select>
-
-  <button onclick="saveLink()">Save</button>
-  <a href="index.html"><button class="secondary">⬅ Back</button></a>
+<section id="loginSection" class="card" style="text-align: center;">
+  <p>Please log in to manage resources.</p>
+  <button onclick="loginWithGoogle()">🔑 Login with Google</button>
+  <a href="index.html"><button class="secondary" style="margin-top: 10px;">⬅ Back to Home</button></a>
 </section>
 
-<section class="card">
-  <ul id="adminList"></ul>
-</section>
+<div id="adminContent" class="hidden">
+  
+  <section class="card" style="text-align: center;">
+    <p>Welcome, Admin!</p>
+    <button class="secondary" onclick="logout()">Sign Out</button>
+    <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
+  </section>
+
+  <section class="card">
+    <h2>📚 Add Resource</h2>
+    <input id="title" placeholder="Title (e.g., Intro to Math)">
+    <input id="url" placeholder="Resource URL">
+    <input id="subject" placeholder="Subject (e.g., Math)">
+    <input id="topic" placeholder="Topic (e.g., Algebra)">
+    <select id="type">
+      <option value="video">Video</option>
+      <option value="quiz">Quiz</option>
+      <option value="note">Note</option>
+    </select>
+    <button onclick="saveLink()">Save Resource</button>
+
+    <h3>Existing Resources</h3>
+    <ul id="adminList"></ul>
+  </section>
+
+  <section class="card">
+    <h2>🌐 Add Platform</h2>
+    <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
+    <input id="platUrl" placeholder="Platform URL">
+    <button onclick="savePlatform()">Save Platform</button>
+
+    <h3>Existing Platforms</h3>
+    <ul id="adminPlatformList"></ul>
+  </section>
+
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 
 <script>
   firebase.initializeApp({
@@ -40,6 +68,7 @@
     projectId: "wiselearn-7f2ec"
   });
   const db = firebase.firestore();
+  const auth = firebase.auth();
 </script>
 
 <script src="script-admin.js"></script>
