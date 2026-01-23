@@ -1,48 +1,64 @@
-firebase.auth().onAuthStateChanged(user => {
-  loginCard.style.display = user ? "none" : "block";
-  adminPanel.style.display = user ? "block" : "none";
-  if (user) loadAdminList();
+const loginCard = document.getElementById("loginCard");
+const adminPanel = document.getElementById("adminPanel");
+
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+
+const title = document.getElementById("title");
+const url = document.getElementById("url");
+const subject = document.getElementById("subject");
+const subtopic = document.getElementById("subtopic");
+const type = document.getElementById("type");
+
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const addBtn = document.getElementById("addBtn");
+
+/* =========================
+   AUTH STATE
+   ========================= */
+auth.onAuthStateChanged(user => {
+  if (user) {
+    loginCard.style.display = "none";
+    adminPanel.style.display = "block";
+  } else {
+    loginCard.style.display = "block";
+    adminPanel.style.display = "none";
+  }
 });
 
-function login() {
-  firebase.auth().signInWithEmailAndPassword(email.value, password.value)
-    .catch(e => alert(e.message));
-}
+/* =========================
+   LOGIN / LOGOUT
+   ========================= */
+loginBtn.addEventListener("click", () => {
+  auth.signInWithEmailAndPassword(email.value, password.value)
+    .catch(err => alert(err.message));
+});
 
-function logout() {
-  firebase.auth().signOut();
-}
+logoutBtn.addEventListener("click", () => {
+  auth.signOut();
+});
 
-function addLink() {
-  if (!title.value || !url.value || !type.value) {
-    alert("Title, URL & type required");
+/* =========================
+   ADD RESOURCE
+   ========================= */
+addBtn.addEventListener("click", () => {
+  if (!title.value || !url.value) {
+    alert("Title and URL required");
     return;
   }
 
   db.collection("links").add({
     title: title.value,
     url: url.value,
-    subject: subject.value || "General",
-    subtopic: subtopic.value || "General",
-    type: type.value
+    subject: subject.value,
+    subtopic: subtopic.value,
+    type: type.value,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
 
-  title.value = url.value = subject.value = subtopic.value = type.value = "";
-}
-
-function loadAdminList() {
-  db.collection("links").onSnapshot(snap => {
-    adminList.innerHTML = "";
-    snap.forEach(doc => {
-      const li = document.createElement("li");
-      li.textContent = doc.data().title;
-
-      const del = document.createElement("button");
-      del.textContent = "❌";
-      del.onclick = () => confirm("Delete?") && doc.ref.delete();
-
-      li.appendChild(del);
-      adminList.appendChild(li);
-    });
-  });
-}
+  title.value = "";
+  url.value = "";
+  subject.value = "";
+  subtopic.value = "";
+});
