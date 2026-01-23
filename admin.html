@@ -17,7 +17,8 @@
   <h2>Admin Login</h2>
   <input id="adminEmail" type="email" placeholder="Email Address">
   <input id="adminPassword" type="password" placeholder="Password">
-  <button onclick="loginWithEmail()">Login</button>
+  
+  <button id="loginBtn">Login</button>
   
   <br><br>
   <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
@@ -27,7 +28,7 @@
   
   <section class="card" style="text-align: center;">
     <p>Logged in as Admin</p>
-    <button class="secondary" onclick="logout()">Sign Out</button>
+    <button id="logoutBtn" class="secondary">Sign Out</button>
     <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
   </section>
 
@@ -42,7 +43,8 @@
       <option value="quiz">Quiz</option>
       <option value="note">Note</option>
     </select>
-    <button onclick="saveLink()">Save Resource</button>
+    
+    <button id="resourceSaveBtn">Save Resource</button>
 
     <h3>Existing Resources</h3>
     <ul id="adminList"></ul>
@@ -52,7 +54,8 @@
     <h2>🌐 Add Platform</h2>
     <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
     <input id="platUrl" placeholder="Platform URL">
-    <button onclick="savePlatform()">Save Platform</button>
+    
+    <button id="platformSaveBtn">Save Platform</button>
 
     <h3>Existing Platforms</h3>
     <ul id="adminPlatformList"></ul>
