@@ -1,4 +1,5 @@
 const list = document.getElementById("platformList");
+if (!list) return;
 
 db.collection("platforms").onSnapshot(snapshot => {
   list.innerHTML = "";

@@ -15,7 +15,7 @@
 <section id="loginCard" class="card">
   <h2>Admin Login</h2>
   <input id="email" type="email" placeholder="Admin email">
-  <input id="password" type="password" placeholder="Password" autocomplete="off">
+  <input id="password" type="password" placeholder="Password">
   <button type="button" onclick="login()">Login</button>
 </section>
 
@@ -62,21 +62,6 @@
   const db = firebase.firestore();
 </script>
 
-<script src="script-admin.js?v=final"></script>
+<script src="script-admin.js"></script>
 </body>
 </html>
-<section class="card">
-  <h2>Manage Platforms</h2>
-
-  <input type="hidden" id="platformEditId">
-
-  <input id="platformName" placeholder="Platform name">
-  <input id="platformUrl" placeholder="Platform URL">
-  <input id="platformLogo" placeholder="Logo image URL">
-
-  <button onclick="savePlatform()">Save Platform</button>
-  <button class="secondary" onclick="clearPlatform()">Clear</button>
-
-  <ul id="platformAdminList"></ul>
-</section>
-

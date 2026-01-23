@@ -1,9 +1,15 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: url("library-bg.jpg") no-repeat center center fixed;
+
+  /* fallback color */
+  background-color: #0f172a;
+
+  /* background image */
+  background-image: url("library-bg.jpg");
   background-size: cover;
-  color: #222;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .header {
