@@ -1,31 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>WISELearn Admin</title>
+  <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="header">
   <h1>🔐 Admin Panel</h1>
-  <p class="subtitle">WISELearn management</p>
 </header>
 
-<section id="loginCard" class="card">
-  <h2>Admin Login</h2>
-  <input id="email" type="email" placeholder="Admin email">
-  <input id="password" type="password" placeholder="Password">
-  <button type="button" onclick="login()">Login</button>
-</section>
-
-<section id="adminPanel" class="card" style="display:none;">
-  <h2>Add / Edit Resource</h2>
-
-  <input type="hidden" id="editId">
-
+<section class="card">
   <input id="title" placeholder="Title">
-  <input id="url" placeholder="URL (https://...)">
+  <input id="url" placeholder="Resource URL">
   <input id="subject" placeholder="Subject">
   <input id="topic" placeholder="Topic">
 
@@ -35,20 +22,15 @@
     <option value="note">Note</option>
   </select>
 
-  <button type="button" onclick="saveLink()">Save</button>
-  <button type="button" class="secondary" onclick="clearForm()">Clear</button>
-  <button type="button" class="secondary" onclick="goHome()">⬅ Back to Home</button>
-  <button type="button" onclick="logout()">Logout</button>
+  <button onclick="saveLink()">Save</button>
+  <a href="index.html"><button class="secondary">⬅ Back</button></a>
 </section>
 
-<section id="resourceList" class="card" style="display:none;">
-  <h2>Existing Resources</h2>
+<section class="card">
   <ul id="adminList"></ul>
 </section>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
 <script>
@@ -57,8 +39,6 @@
     authDomain: "wiselearn-7f2ec.firebaseapp.com",
     projectId: "wiselearn-7f2ec"
   });
-
-  const auth = firebase.auth();
   const db = firebase.firestore();
 </script>
 
