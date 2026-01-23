@@ -43,7 +43,9 @@
         <option value="quiz">Quiz</option>
         <option value="note">Note</option>
       </select>
+      
       <button id="resourceSaveBtn">Save Resource</button>
+      <button id="resourceCancelBtn" class="cancel-btn d-none">Cancel Edit</button>
 
       <h3>Existing Resources</h3>
       <ul id="adminList"></ul>
@@ -59,8 +61,10 @@
     <div class="content-body hidden" id="platformBody">
       <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
       <input id="platUrl" placeholder="Link URL">
-      <input id="platImg" placeholder="Image URL (Right-click image > Copy Address)">
+      <input id="platImg" placeholder="Image URL">
+      
       <button id="platformSaveBtn">Save Platform</button>
+      <button id="platformCancelBtn" class="cancel-btn d-none">Cancel Edit</button>
 
       <h3>Existing Platforms</h3>
       <ul id="adminPlatformList"></ul>

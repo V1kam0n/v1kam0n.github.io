@@ -186,3 +186,22 @@ li a:hover {
 .hidden {
   display: none !important;
 }
+
+/* ... (keep existing CSS) ... */
+
+/* ✏️ EDIT BUTTON */
+button.edit-btn {
+  background: #0284c7; /* Blue */
+  color: white;
+  margin-right: 5px;
+}
+button.edit-btn:hover {
+  background: #0369a1;
+}
+
+/* Cancel Edit Button (Gray) */
+button.cancel-btn {
+  background: #64748b;
+  color: white;
+  margin-top: 5px;
+}

@@ -16,8 +16,9 @@ const resourceBody = document.getElementById("resourceBody");
 const platformHeader = document.getElementById("platformHeader");
 const platformBody = document.getElementById("platformBody");
 
-// Inputs
+// Resource Inputs
 const resourceSaveBtn = document.getElementById("resourceSaveBtn");
+const resourceCancelBtn = document.getElementById("resourceCancelBtn");
 const adminList = document.getElementById("adminList");
 const titleInput = document.getElementById("title");
 const urlInput = document.getElementById("url");
@@ -25,61 +26,54 @@ const subjectInput = document.getElementById("subject");
 const topicInput = document.getElementById("topic");
 const typeInput = document.getElementById("type");
 
+// Platform Inputs
 const platformSaveBtn = document.getElementById("platformSaveBtn");
+const platformCancelBtn = document.getElementById("platformCancelBtn");
 const adminPlatformList = document.getElementById("adminPlatformList");
 const platNameInput = document.getElementById("platName");
 const platUrlInput = document.getElementById("platUrl");
 const platImgInput = document.getElementById("platImg");
 
+// STATE VARIABLES (To track what we are editing)
+let editingResourceId = null;
+let editingPlatformId = null;
+
 // =========================
-// 1. AUTH LOGIC (The Fix)
+// 1. AUTH & TOGGLES
 // =========================
 if (auth) {
   auth.onAuthStateChanged(user => {
     if (user) {
-      console.log("Logged in:", user.email);
-      // HIDE Login, SHOW Admin
       loginSection.classList.add("d-none");
       adminContent.classList.remove("d-none");
-      
       loadResources();
       loadPlatforms();
     } else {
-      console.log("Logged out");
-      // SHOW Login, HIDE Admin
       loginSection.classList.remove("d-none");
       adminContent.classList.add("d-none");
     }
   });
 }
 
-if (loginBtn) {
-  loginBtn.addEventListener("click", () => {
-    auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
-      .catch(e => alert("Login Failed: " + e.message));
-  });
-}
+if(loginBtn) loginBtn.addEventListener("click", () => {
+  auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
+    .catch(e => alert("Login Failed: " + e.message));
+});
 
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => auth.signOut());
-}
+if(logoutBtn) logoutBtn.addEventListener("click", () => auth.signOut());
 
-// =========================
-// 2. TOGGLES
-// =========================
 function toggleSection(header, body) {
   header.addEventListener("click", () => {
-    body.classList.toggle("hidden"); // Toggles visibility
-    header.classList.toggle("collapsed"); // Rotates arrow
+    body.classList.toggle("hidden");
+    header.classList.toggle("collapsed");
   });
 }
-
-if(resourceHeader && resourceBody) toggleSection(resourceHeader, resourceBody);
-if(platformHeader && platformBody) toggleSection(platformHeader, platformBody);
+if(resourceHeader) toggleSection(resourceHeader, resourceBody);
+if(platformHeader) toggleSection(platformHeader, platformBody);
 
 
 // =========================
-// 3. DATA FUNCTIONS
+// 2. RESOURCE MANAGER (Edit & Save)
 // =========================
 function loadResources() {
   db.collection("links").onSnapshot(snapshot => {
@@ -89,30 +83,78 @@ function loadResources() {
       const li = document.createElement("li");
       li.innerHTML = `
           <strong>${r.title}</strong> (${r.subject})
-          <button class="secondary delete-btn" style="float:right; padding: 4px 8px; margin:0;">Delete</button>
+          <div style="float:right;">
+             <button class="edit-btn" style="padding: 4px 8px; margin:0;">Edit</button>
+             <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
+          </div>
       `;
+      // Attach events
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('links', doc.id));
+      li.querySelector(".edit-btn").addEventListener("click", () => startEditResource(doc));
       adminList.appendChild(li);
     });
   });
 }
 
-if (resourceSaveBtn) {
-  resourceSaveBtn.addEventListener("click", () => {
-    if (!titleInput.value || !urlInput.value) return alert("Fill all fields");
-    db.collection("links").add({
-      title: titleInput.value,
-      url: urlInput.value,
-      subject: subjectInput.value,
-      topic: topicInput.value,
-      type: typeInput.value
-    }).then(() => {
-       titleInput.value = ""; urlInput.value = ""; 
-       subjectInput.value = ""; topicInput.value = "";
-    });
-  });
+// Function to Start Editing
+function startEditResource(doc) {
+  const data = doc.data();
+  // Fill inputs
+  titleInput.value = data.title;
+  urlInput.value = data.url;
+  subjectInput.value = data.subject;
+  topicInput.value = data.topic;
+  typeInput.value = data.type;
+
+  // Set State
+  editingResourceId = doc.id;
+  resourceSaveBtn.innerText = "Update Resource"; // Change button text
+  resourceCancelBtn.classList.remove("d-none");  // Show cancel button
+  
+  // Scroll to top of form
+  resourceBody.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Cancel Editing
+resourceCancelBtn.addEventListener("click", () => {
+  resetResourceForm();
+});
+
+// Save or Update
+resourceSaveBtn.addEventListener("click", () => {
+  if (!titleInput.value || !urlInput.value) return alert("Fill all fields");
+
+  const data = {
+    title: titleInput.value,
+    url: urlInput.value,
+    subject: subjectInput.value,
+    topic: topicInput.value,
+    type: typeInput.value
+  };
+
+  if (editingResourceId) {
+    // UPDATE existing
+    db.collection("links").doc(editingResourceId).update(data)
+      .then(() => resetResourceForm());
+  } else {
+    // ADD new
+    db.collection("links").add(data)
+      .then(() => resetResourceForm());
+  }
+});
+
+function resetResourceForm() {
+  titleInput.value = ""; urlInput.value = ""; 
+  subjectInput.value = ""; topicInput.value = "";
+  editingResourceId = null;
+  resourceSaveBtn.innerText = "Save Resource";
+  resourceCancelBtn.classList.add("d-none");
+}
+
+
+// =========================
+// 3. PLATFORM MANAGER (Edit & Save)
+// =========================
 function loadPlatforms() {
   db.collection("platforms").onSnapshot(snapshot => {
     adminPlatformList.innerHTML = "";
@@ -121,29 +163,64 @@ function loadPlatforms() {
       const li = document.createElement("li");
       li.innerHTML = `
           <strong>${p.name}</strong>
-          <button class="secondary delete-btn" style="float:right; padding: 4px 8px; margin:0;">Delete</button>
+          <div style="float:right;">
+             <button class="edit-btn" style="padding: 4px 8px; margin:0;">Edit</button>
+             <button class="secondary delete-btn" style="padding: 4px 8px; margin:0;">Delete</button>
+          </div>
       `;
       li.querySelector(".delete-btn").addEventListener("click", () => deleteDoc('platforms', doc.id));
+      li.querySelector(".edit-btn").addEventListener("click", () => startEditPlatform(doc));
       adminPlatformList.appendChild(li);
     });
   });
 }
 
-if (platformSaveBtn) {
-  platformSaveBtn.addEventListener("click", () => {
-    if (!platNameInput.value || !platUrlInput.value) return alert("Fill Name and URL");
-    db.collection("platforms").add({
-      name: platNameInput.value,
-      url: platUrlInput.value,
-      image: platImgInput.value || "https://placehold.co/600x400?text=No+Image"
-    }).then(() => {
-      platNameInput.value = ""; platUrlInput.value = ""; platImgInput.value = "";
-    });
-  });
+function startEditPlatform(doc) {
+  const data = doc.data();
+  platNameInput.value = data.name;
+  platUrlInput.value = data.url;
+  platImgInput.value = data.image || "";
+
+  editingPlatformId = doc.id;
+  platformSaveBtn.innerText = "Update Platform";
+  platformCancelBtn.classList.remove("d-none");
+  platformBody.scrollIntoView({ behavior: 'smooth' });
 }
 
+platformCancelBtn.addEventListener("click", () => {
+  resetPlatformForm();
+});
+
+platformSaveBtn.addEventListener("click", () => {
+  if (!platNameInput.value || !platUrlInput.value) return alert("Fill Name and URL");
+
+  const data = {
+    name: platNameInput.value,
+    url: platUrlInput.value,
+    image: platImgInput.value || "https://placehold.co/600x400?text=No+Image"
+  };
+
+  if (editingPlatformId) {
+    db.collection("platforms").doc(editingPlatformId).update(data)
+      .then(() => resetPlatformForm());
+  } else {
+    db.collection("platforms").add(data)
+      .then(() => resetPlatformForm());
+  }
+});
+
+function resetPlatformForm() {
+  platNameInput.value = ""; platUrlInput.value = ""; platImgInput.value = "";
+  editingPlatformId = null;
+  platformSaveBtn.innerText = "Save Platform";
+  platformCancelBtn.classList.add("d-none");
+}
+
+// =========================
+// UTILS
+// =========================
 function deleteDoc(collection, id) {
-  if (confirm("Delete this?")) {
+  if (confirm("Delete this item?")) {
     db.collection(collection).doc(id).delete();
   }
 }
