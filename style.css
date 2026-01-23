@@ -7,13 +7,14 @@
 body {
   margin: 0;
   min-height: 100vh;
-  /* Reduced white overlay from 0.88 to 0.4 so the image shows through */
+  /* Reduced white overlay to 0.4 so the image is visible */
   background: 
     linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
     url("assets/library-bg.jpg") no-repeat center center fixed;
   background-size: cover;
   color: #3a2e1f;
 }
+
 /* 🏷️ HEADERS */
 .header {
   text-align: center;
@@ -119,4 +120,69 @@ li a:hover {
 
 .admin-link:hover {
   background: #78350b;
+}
+
+/* =========================
+   NEW ADDITIONS
+   ========================= */
+
+/* 🖼️ PLATFORM IMAGES */
+.platform-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: #eee;
+}
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* 🔽 COLLAPSIBLE SECTIONS */
+.toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: #fdfdfd;
+  border-bottom: 1px solid #eee;
+  padding: 16px;
+  border-radius: 14px 14px 0 0;
+  transition: background 0.2s;
+}
+
+.toggle-header:hover {
+  background: #f5f5f5;
+}
+
+.toggle-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.toggle-icon {
+  font-weight: bold;
+  color: #92400e;
+  transform: rotate(0deg);
+  transition: transform 0.3s;
+}
+
+/* Icon rotates when collapsed */
+.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}
+
+/* Content Body */
+.content-body {
+  padding: 16px;
+  display: block;
+}
+
+/* Utilities */
+.hidden {
+  display: none !important;
 }

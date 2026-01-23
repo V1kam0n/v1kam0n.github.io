@@ -3,9 +3,6 @@
 <head>
   <title>Admin Panel</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    .hidden { display: none; }
-  </style>
 </head>
 <body>
 
@@ -17,48 +14,59 @@
   <h2>Admin Login</h2>
   <input id="adminEmail" type="email" placeholder="Email Address">
   <input id="adminPassword" type="password" placeholder="Password">
-  
   <button id="loginBtn">Login</button>
-  
   <br><br>
   <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
 </section>
 
 <div id="adminContent" class="hidden">
   
-  <section class="card" style="text-align: center;">
+  <section class="card" style="text-align: center; padding: 10px;">
     <p>Logged in as Admin</p>
-    <button id="logoutBtn" class="secondary">Sign Out</button>
+    <button id="logoutBtn" class="secondary" style="margin:0;">Sign Out</button>
     <a href="index.html"><button class="secondary">⬅ Back to Home</button></a>
   </section>
 
-  <section class="card">
-    <h2>📚 Add Resource</h2>
-    <input id="title" placeholder="Title (e.g., Intro to Math)">
-    <input id="url" placeholder="Resource URL">
-    <input id="subject" placeholder="Subject (e.g., Math)">
-    <input id="topic" placeholder="Topic (e.g., Algebra)">
-    <select id="type">
-      <option value="video">Video</option>
-      <option value="quiz">Quiz</option>
-      <option value="note">Note</option>
-    </select>
+  <section class="card" style="padding: 0;">
     
-    <button id="resourceSaveBtn">Save Resource</button>
+    <div class="toggle-header" id="resourceHeader">
+      <h2>📚 Manage Resources</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
 
-    <h3>Existing Resources</h3>
-    <ul id="adminList"></ul>
+    <div class="content-body" id="resourceBody">
+      <input id="title" placeholder="Title (e.g., Intro to Math)">
+      <input id="url" placeholder="Resource URL">
+      <input id="subject" placeholder="Subject (e.g., Math)">
+      <input id="topic" placeholder="Topic (e.g., Algebra)">
+      <select id="type">
+        <option value="video">Video</option>
+        <option value="quiz">Quiz</option>
+        <option value="note">Note</option>
+      </select>
+      <button id="resourceSaveBtn">Save Resource</button>
+
+      <h3>Existing Resources</h3>
+      <ul id="adminList"></ul>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>🌐 Add Platform</h2>
-    <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
-    <input id="platUrl" placeholder="Platform URL">
+  <section class="card" style="padding: 0;">
     
-    <button id="platformSaveBtn">Save Platform</button>
+    <div class="toggle-header" id="platformHeader">
+      <h2>🌐 Manage Platforms</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
 
-    <h3>Existing Platforms</h3>
-    <ul id="adminPlatformList"></ul>
+    <div class="content-body" id="platformBody">
+      <input id="platName" placeholder="Platform Name (e.g., Khan Academy)">
+      <input id="platUrl" placeholder="Link URL">
+      <input id="platImg" placeholder="Image URL (Right-click image > Copy Image Address)">
+      <button id="platformSaveBtn">Save Platform</button>
+
+      <h3>Existing Platforms</h3>
+      <ul id="adminPlatformList"></ul>
+    </div>
   </section>
 
 </div>
@@ -68,6 +76,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 
 <script>
+  // Initialize Firebase
   firebase.initializeApp({
     apiKey: "AIzaSyAsPMCpruif5B-cSPtRG2Ddv4AC8loYtzY",
     authDomain: "wiselearn-7f2ec.firebaseapp.com",
