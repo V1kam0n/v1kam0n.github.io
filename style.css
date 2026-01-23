@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: system-ui, sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 /* 🌄 BACKGROUND IMAGE */
@@ -8,36 +8,50 @@ body {
   margin: 0;
   min-height: 100vh;
   background: 
-    linear-gradient(rgba(255,255,255,0.88), rgba(255,255,255,0.88)),
+    linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.88)),
     url("assets/library-bg.jpg") no-repeat center center fixed;
   background-size: cover;
   color: #3a2e1f;
 }
 
+/* 🏷️ HEADERS */
 .header {
   text-align: center;
   padding: 20px;
 }
 
-.subtitle {
-  opacity: 0.75;
+h1 {
+  margin: 0;
+  font-size: 2rem;
 }
 
+.subtitle {
+  margin-top: 8px;
+  opacity: 0.75;
+  font-size: 1rem;
+}
+
+/* 🃏 CARDS */
 .card {
   background: white;
   max-width: 720px;
   margin: 16px auto;
   padding: 16px;
   border-radius: 14px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
+/* 🔘 INPUTS & BUTTONS */
 input, select, button {
   width: 100%;
   margin: 6px 0;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 button {
@@ -45,6 +59,12 @@ button {
   color: white;
   border: none;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #78350b;
 }
 
 button.secondary {
@@ -52,15 +72,37 @@ button.secondary {
   color: #333;
 }
 
+button.secondary:hover {
+  background: #d4d4d4;
+}
+
+/* 📄 LISTS */
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
-  margin-bottom: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
 }
 
+li:last-child {
+  border-bottom: none;
+}
+
+li a {
+  color: #92400e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+li a:hover {
+  text-decoration: underline;
+}
+
+/* 🔗 ADMIN LINK (Floating) */
 .admin-link {
   position: fixed;
   top: 10px;
@@ -70,4 +112,11 @@ li {
   padding: 8px 12px;
   text-decoration: none;
   border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(146, 64, 14, 0.3);
+  z-index: 1000;
+}
+
+.admin-link:hover {
+  background: #78350b;
 }
